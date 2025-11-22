@@ -16,19 +16,10 @@ public class BrapiMapper {
         data.setPrice(r.getRegularMarketPrice());
         data.setEps(r.getEarningsPerShare());
 
-        // lógica de dividendos
-        Double dividendTtm = null;
-
-        if (r.getTrailingAnnualDividendRate() != null) {
-            dividendTtm = r.getTrailingAnnualDividendRate();
-        } 
-        else if (r.getDividendYield() != null) {
-            // se vier porcentagem — converter para valor TTM:
-            // dividendYield = dividend / price
-            dividendTtm = r.getDividendYield() * r.getRegularMarketPrice();
+        // Apenas mapeia lista de dividendos (sem calcular)
+        if (r.getDividendsData() != null) {
+            data.setCashDividends(r.getDividendsData().getCashDividends());
         }
-
-        data.setDividendTtm(dividendTtm);
 
         return data;
     }

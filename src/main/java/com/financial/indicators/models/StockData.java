@@ -1,20 +1,21 @@
 package com.financial.indicators.models;
 
-import lombok.AllArgsConstructor;
+import java.util.List;
+
+import com.financial.indicators.external.brapi.dto.BrapiResponse;
+
 import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
 public class StockData {
-   
+
     private String symbol;
-    private Double price;          // regularMarketPrice
-    private Double eps;            // earningsPerShare
-    private Double dividendTtm;    // trailingAnnualDividendRate (ou convertido do dividendYield)
+    private Double price;
+    private Double eps;
+
+    // Lista de dividendos brutos vindos da BRAPI
+    private List<BrapiResponse.Result.CashDividend> cashDividends;
+
+    // TTM calculado na service
+    private Double dividendTtm;
 }
