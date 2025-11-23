@@ -71,7 +71,7 @@ There are two ways to configure the token, but only one of them is recommended.
 ### Recommended: Using System Environment Variables
 
 Using environment variables is the safest and cleanest way to configure your BRAPI token.
-This keeps your token out of the project files and prevents accidental exposure on GitHub.
+This keeps your token out of the project files and prevents accidental exposure on the internet.
 
 On Linux / macOS, run:
 ```
