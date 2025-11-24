@@ -8,13 +8,13 @@ public class StockData {
     private String symbol;
     private Double price;
 
-    // EPS TTM (trailing earnings per share)
-    private Double epsTtm;
+    // =====================================================================
+    // FUNDAMENTALS DATA
+    // =====================================================================
 
-    // Dividend TTM (total dividends last 12 months)
+    private Double epsTtm;
     private Double dividendTtm;
 
-    // ========== Fundamental Fields ==========
     private Double priceToBook;
     private Double profitMargin;
     private Double returnOnAssets;
@@ -23,23 +23,42 @@ public class StockData {
     private Double enterpriseValue;
     private Double sharesOutstanding;
 
-    // ========== Financial Data ==========
+    // =====================================================================
+    // FINANCIAL DATA
+    // =====================================================================
+
     private Double totalRevenue;
     private Double ebitda;
 
-    // ========== Margins ==========
     private Double grossMargin;
     private Double operatingMargin;
+    private Double ebitdaMargin; // opcional para debug
 
-    // EBITDA Margin será calculado no service, não precisa ser salvo bruto
-    // mas deixamos espaço se quiser usar em debug
-    // private Double ebitdaMargin;
-
-    // ========== Growth ==========
     private Double revenueGrowth;
     private Double earningsGrowth;
 
-    // ========== Liquidity Ratios ==========
     private Double quickRatio;
     private Double currentRatio;
+
+    private Double totalDebt;
+
+    private Double totalCash;
+    private Double totalCashPerShare;
+
+    private Double freeCashFlow;
+    private Double operatingCashflow;
+
+    private Double grossProfits;
+
+    // =====================================================================
+    // ANALYST DATA (TARGETS / RATINGS)
+    // =====================================================================
+
+    private Double targetHighPrice;
+    private Double targetLowPrice;
+    private Double targetMeanPrice;
+    private Double targetMedianPrice;
+
+    private Double recommendationMean;
+    private Double numberOfAnalystOpinions;
 }
