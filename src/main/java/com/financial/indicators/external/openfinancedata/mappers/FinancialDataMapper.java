@@ -10,83 +10,109 @@ public class FinancialDataMapper {
 
     public StockData toStockData(StockData data, FinancialDataResponse dto) {
 
-        if (data == null || dto == null ||
-            dto.getQuoteSummary() == null ||
-            dto.getQuoteSummary().getResult() == null ||
-            dto.getQuoteSummary().getResult().length == 0 ||
-            dto.getQuoteSummary().getResult()[0] == null ||
-            dto.getQuoteSummary().getResult()[0].getFinancialData() == null) {
-
-            return data;
-        }
-
         var fin = dto.getQuoteSummary().getResult()[0].getFinancialData();
+
+        // =====================================================
+        // PRICE & TARGETS
+        // =====================================================
+        if (fin.getCurrentPrice() != null)
+            data.setPrice(fin.getCurrentPrice().getRaw());
+
+        if (fin.getTargetHighPrice() != null)
+            data.setTargetHighPrice(fin.getTargetHighPrice().getRaw());
+
+        if (fin.getTargetLowPrice() != null)
+            data.setTargetLowPrice(fin.getTargetLowPrice().getRaw());
+
+        if (fin.getTargetMeanPrice() != null)
+            data.setTargetMeanPrice(fin.getTargetMeanPrice().getRaw());
+
+        if (fin.getTargetMedianPrice() != null)
+            data.setTargetMedianPrice(fin.getTargetMedianPrice().getRaw());
+
+        if (fin.getRecommendationMean() != null)
+            data.setRecommendationMean(fin.getRecommendationMean().getRaw());
+
+        if (fin.getNumberOfAnalystOpinions() != null)
+            data.setNumberOfAnalystOpinions(fin.getNumberOfAnalystOpinions().getRaw());
 
         // =====================================================
         // CASH
         // =====================================================
-        if (fin.getTotalCash() != null) {
+        if (fin.getTotalCash() != null)
             data.setTotalCash(fin.getTotalCash().getRaw());
-        }
 
-        if (fin.getTotalCashPerShare() != null) {
+        if (fin.getTotalCashPerShare() != null)
             data.setTotalCashPerShare(fin.getTotalCashPerShare().getRaw());
-        }
 
         // =====================================================
         // DEBT
         // =====================================================
-        if (fin.getTotalDebt() != null) {
+        if (fin.getTotalDebt() != null)
             data.setTotalDebt(fin.getTotalDebt().getRaw());
-        }
+
+        if (fin.getDebtToEquity() != null)
+            data.setDebtToEquity(fin.getDebtToEquity().getRaw());
 
         // =====================================================
         // CASHFLOWS
         // =====================================================
-        if (fin.getFreeCashflow() != null) {
+        if (fin.getFreeCashflow() != null)
             data.setFreeCashFlow(fin.getFreeCashflow().getRaw());
-        }
 
-        if (fin.getOperatingCashflow() != null) {
+        if (fin.getOperatingCashflow() != null)
             data.setOperatingCashflow(fin.getOperatingCashflow().getRaw());
-        }
 
         // =====================================================
-        // GROSS PROFITS
+        // INCOME STATEMENT
         // =====================================================
-        if (fin.getGrossProfits() != null) {
+        if (fin.getTotalRevenue() != null)
+            data.setTotalRevenue(fin.getTotalRevenue().getRaw());
+
+        if (fin.getEbitda() != null)
+            data.setEbitda(fin.getEbitda().getRaw());
+
+        if (fin.getGrossProfits() != null)
             data.setGrossProfits(fin.getGrossProfits().getRaw());
-        }
 
         // =====================================================
-        // TARGET PRICES
+        // GROWTH
         // =====================================================
-        if (fin.getTargetHighPrice() != null) {
-            data.setTargetHighPrice(fin.getTargetHighPrice().getRaw());
-        }
+        if (fin.getEarningsGrowth() != null)
+            data.setEarningsGrowth(fin.getEarningsGrowth().getRaw());
 
-        if (fin.getTargetLowPrice() != null) {
-            data.setTargetLowPrice(fin.getTargetLowPrice().getRaw());
-        }
-
-        if (fin.getTargetMeanPrice() != null) {
-            data.setTargetMeanPrice(fin.getTargetMeanPrice().getRaw());
-        }
-
-        if (fin.getTargetMedianPrice() != null) {
-            data.setTargetMedianPrice(fin.getTargetMedianPrice().getRaw());
-        }
+        if (fin.getRevenueGrowth() != null)
+            data.setRevenueGrowth(fin.getRevenueGrowth().getRaw());
 
         // =====================================================
-        // ANALYST RATINGS
+        // MARGINS
         // =====================================================
-        if (fin.getRecommendationMean() != null) {
-            data.setRecommendationMean(fin.getRecommendationMean().getRaw());
-        }
+        if (fin.getGrossMargins() != null)
+            data.setGrossMargin(fin.getGrossMargins().getRaw());
 
-        if (fin.getNumberOfAnalystOpinions() != null) {
-            data.setNumberOfAnalystOpinions(fin.getNumberOfAnalystOpinions().getRaw());
-        }
+        if (fin.getOperatingMargins() != null)
+            data.setOperatingMargin(fin.getOperatingMargins().getRaw());
+
+        if (fin.getEbitdaMargins() != null)
+            data.setEbitdaMargin(fin.getEbitdaMargins().getRaw());
+
+        // =====================================================
+        // RATIOS
+        // =====================================================
+        if (fin.getQuickRatio() != null)
+            data.setQuickRatio(fin.getQuickRatio().getRaw());
+
+        if (fin.getCurrentRatio() != null)
+            data.setCurrentRatio(fin.getCurrentRatio().getRaw());
+
+        if (fin.getPriceToSalesTrailing12Months() != null)
+            data.setPriceToSalesTrailing12Months(fin.getPriceToSalesTrailing12Months().getRaw());
+
+        // =====================================================
+        // PER SHARE
+        // =====================================================
+        if (fin.getRevenuePerShare() != null)
+            data.setRevenuePerShare(fin.getRevenuePerShare().getRaw());
 
         return data;
     }

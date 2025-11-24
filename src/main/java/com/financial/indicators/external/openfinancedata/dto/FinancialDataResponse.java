@@ -22,6 +22,7 @@ public class FinancialDataResponse {
     public static class FinancialData {
 
         private Value currentPrice;
+
         private Value targetHighPrice;
         private Value targetLowPrice;
         private Value targetMeanPrice;
@@ -33,17 +34,15 @@ public class FinancialDataResponse {
         private Value totalCash;
         private Value totalCashPerShare;
 
-        private Value ebitda;
         private Value totalDebt;
-
-        private Value quickRatio;
-        private Value currentRatio;
-
-        private Value totalRevenue;
-        private Value grossProfits;
+        private Value debtToEquity;
 
         private Value freeCashflow;
         private Value operatingCashflow;
+
+        private Value totalRevenue;
+        private Value ebitda;
+        private Value grossProfits;
 
         private Value earningsGrowth;
         private Value revenueGrowth;
@@ -51,6 +50,12 @@ public class FinancialDataResponse {
         private Value grossMargins;
         private Value operatingMargins;
         private Value ebitdaMargins;
+
+        private Value quickRatio;
+        private Value currentRatio;
+        private Value priceToSalesTrailing12Months;
+
+        private Value revenuePerShare;
 
         private String financialCurrency;
     }

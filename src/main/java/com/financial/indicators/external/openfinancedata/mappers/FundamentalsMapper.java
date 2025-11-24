@@ -30,98 +30,138 @@ public class FundamentalsMapper {
         // =====================================================
         // PRICE
         // =====================================================
-        if (fin != null && fin.getCurrentPrice() != null) {
+        if (fin != null && fin.getCurrentPrice() != null)
             data.setPrice(fin.getCurrentPrice().getRaw());
-        }
 
         // =====================================================
-        // EPS TTM
+        // EPS (TTM)
         // =====================================================
-        if (stats != null && stats.getTrailingEps() != null) {
+        if (stats != null && stats.getTrailingEps() != null)
             data.setEpsTtm(stats.getTrailingEps().getRaw());
-        }
 
         // =====================================================
-        // DIVIDEND TTM
+        // DIVIDENDS
         // =====================================================
-        if (summary != null && summary.getTrailingAnnualDividendRate() != null) {
+        if (summary != null && summary.getTrailingAnnualDividendRate() != null)
             data.setDividendTtm(summary.getTrailingAnnualDividendRate().getRaw());
-        } else if (stats != null && stats.getLastDividendValue() != null) {
+        else if (stats != null && stats.getLastDividendValue() != null)
             data.setDividendTtm(stats.getLastDividendValue().getRaw());
-        }
+
+        if (summary != null && summary.getDividendRate() != null)
+            data.setDividendRate(summary.getDividendRate().getRaw());
 
         // =====================================================
-        // PRICE/BOOK
+        // PRICE / BOOK
         // =====================================================
-        if (stats != null && stats.getPriceToBook() != null) {
+        if (stats != null && stats.getPriceToBook() != null)
             data.setPriceToBook(stats.getPriceToBook().getRaw());
-        }
+
+        if (stats != null && stats.getBookValue() != null)
+            data.setBookValue(stats.getBookValue().getRaw());
 
         // =====================================================
-        // PROFIT MARGIN
+        // RETURN ON ASSETS / EQUITY
         // =====================================================
-        if (stats != null && stats.getProfitMargins() != null) {
-            data.setProfitMargin(stats.getProfitMargins().getRaw());
-        }
-
-        // =====================================================
-        // RETURN ON ASSETS & EQUITY
-        // =====================================================
-        if (fin != null && fin.getReturnOnAssets() != null) {
+        if (fin != null && fin.getReturnOnAssets() != null)
             data.setReturnOnAssets(fin.getReturnOnAssets().getRaw());
-        }
-        if (fin != null && fin.getReturnOnEquity() != null) {
+
+        if (fin != null && fin.getReturnOnEquity() != null)
             data.setReturnOnEquity(fin.getReturnOnEquity().getRaw());
-        }
 
         // =====================================================
-        // ENTERPRISE VALUE & SHARES
+        // ENTERPRISE & SHARES
         // =====================================================
-        if (stats != null && stats.getEnterpriseValue() != null) {
+        if (stats != null && stats.getEnterpriseValue() != null)
             data.setEnterpriseValue(stats.getEnterpriseValue().getRaw());
-        }
-        if (stats != null && stats.getSharesOutstanding() != null) {
+
+        if (stats != null && stats.getSharesOutstanding() != null)
             data.setSharesOutstanding(stats.getSharesOutstanding().getRaw());
-        }
 
         // =====================================================
-        // TOTAL REVENUE & EBITDA
+        // INCOME STATEMENT — Revenue / EBITDA
         // =====================================================
-        if (fin != null && fin.getTotalRevenue() != null) {
+        if (fin != null && fin.getTotalRevenue() != null)
             data.setTotalRevenue(fin.getTotalRevenue().getRaw());
-        }
-        if (fin != null && fin.getEbitda() != null) {
+
+        if (fin != null && fin.getEbitda() != null)
             data.setEbitda(fin.getEbitda().getRaw());
-        }
 
         // =====================================================
         // MARGINS
         // =====================================================
-        if (fin != null && fin.getGrossMargins() != null) {
+        if (fin != null && fin.getGrossMargins() != null)
             data.setGrossMargin(fin.getGrossMargins().getRaw());
-        }
-        if (fin != null && fin.getOperatingMargins() != null) {
+
+        if (fin != null && fin.getOperatingMargins() != null)
             data.setOperatingMargin(fin.getOperatingMargins().getRaw());
-        }
 
         // =====================================================
         // GROWTH
         // =====================================================
-        if (fin != null && fin.getRevenueGrowth() != null) {
+        if (fin != null && fin.getRevenueGrowth() != null)
             data.setRevenueGrowth(fin.getRevenueGrowth().getRaw());
-        }
-        if (fin != null && fin.getEarningsGrowth() != null) {
+
+        if (fin != null && fin.getEarningsGrowth() != null)
             data.setEarningsGrowth(fin.getEarningsGrowth().getRaw());
+
+        // =====================================================
+        // LIQUIDITY
+        // =====================================================
+        if (fin != null && fin.getQuickRatio() != null)
+            data.setQuickRatio(fin.getQuickRatio().getRaw());
+
+        if (fin != null && fin.getCurrentRatio() != null)
+            data.setCurrentRatio(fin.getCurrentRatio().getRaw());
+
+        // =====================================================
+        // SUMMARY DETAIL — extended fields
+        // =====================================================
+        if (summary != null) {
+
+            if (summary.getPreviousClose() != null)
+                data.setPreviousClose(summary.getPreviousClose().getRaw());
+
+            if (summary.getFiftyTwoWeekHigh() != null)
+                data.setFiftyTwoWeekHigh(summary.getFiftyTwoWeekHigh().getRaw());
+
+            if (summary.getFiftyTwoWeekLow() != null)
+                data.setFiftyTwoWeekLow(summary.getFiftyTwoWeekLow().getRaw());
+
+            if (summary.getAllTimeHigh() != null)
+                data.setAllTimeHigh(summary.getAllTimeHigh().getRaw());
+
+            if (summary.getAllTimeLow() != null)
+                data.setAllTimeLow(summary.getAllTimeLow().getRaw());
+
+            if (summary.getBeta() != null)
+                data.setBeta(summary.getBeta().getRaw());
+
+            if (summary.getAverageVolume() != null)
+                data.setAverageVolume(summary.getAverageVolume().getRaw());
+
+            if (summary.getRegularMarketVolume() != null)
+                data.setRegularMarketVolume(summary.getRegularMarketVolume().getRaw());
+
+            if (summary.getPriceToSalesTrailing12Months() != null)
+                data.setPriceToSalesTrailing12Months(summary.getPriceToSalesTrailing12Months().getRaw());
         }
 
         // =====================================================
-        // LIQUIDITY RATIOS
+        // KEY STATISTICS — advanced ratios
         // =====================================================
-        if (fin != null && fin.getQuickRatio() != null) {
-            data.setQuickRatio(fin.getQuickRatio().getRaw());
-        }
-        if (fin != null && fin.getCurrentRatio() != null) {
-            data.setCurrentRatio(fin.getCurrentRatio().getRaw());
+        if (stats != null) {
+
+            if (stats.getEnterpriseToRevenue() != null)
+                data.setEnterpriseToRevenue(stats.getEnterpriseToRevenue().getRaw());
+
+            if (stats.getEnterpriseToEbitda() != null)
+                data.setEnterpriseToEbitda(stats.getEnterpriseToEbitda().getRaw());
+
+            if (stats.getPriceToSalesTrailing12Months() != null)
+                data.setPriceToSalesTrailing12Months(stats.getPriceToSalesTrailing12Months().getRaw());
+
+            if (stats.getNetIncomeToCommon() != null)
+                data.setNetIncomeToCommon(stats.getNetIncomeToCommon().getRaw());
         }
 
         return data;

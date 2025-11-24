@@ -18,61 +18,115 @@ public class FundamentalsResponse {
         private SummaryDetail summaryDetail;
         private DefaultKeyStatistics defaultKeyStatistics;
         private FinancialData financialData;
-        private Object earnings; // permanece placeholder
+        private Object earnings;
     }
 
-    // ============================
-    // SUMMARY DETAIL
-    // ============================
+    // ======================================================
+    // SUMMARY DETAIL (JSON REAL)
+    // ======================================================
     @Data
     public static class SummaryDetail {
+
+        private Value previousClose;
+        private Value open;
+        private Value dayLow;
+        private Value dayHigh;
+
+        private Value regularMarketPreviousClose;
+        private Value regularMarketOpen;
+        private Value regularMarketDayLow;
+        private Value regularMarketDayHigh;
+
         private Value trailingAnnualDividendRate;
+        private Value trailingAnnualDividendYield;
+
+        private Value dividendRate;
+        private Value dividendYield;
+
+        private Value payoutRatio;
+
+        private Value beta;
+
         private Value trailingPE;
-        private Value dividendYield;       // ADICIONADO
-        private Value priceToBook;         // ADICIONADO
+        private Value forwardPE;
+
+        private Value marketCap;
+
+        private Value fiftyTwoWeekLow;
+        private Value fiftyTwoWeekHigh;
+
+        private Value allTimeHigh;
+        private Value allTimeLow;
+
+        private Value priceToSalesTrailing12Months;
+
+        private Value averageVolume;
+        private Value regularMarketVolume;
+
+        private Value bid;
+        private Value ask;
+        private Value volume;
     }
 
-    // ============================
-    // DEFAULT KEY STATISTICS
-    // ============================
+    // ======================================================
+    // DEFAULT KEY STATISTICS  (JSON REAL)
+    // ======================================================
     @Data
     public static class DefaultKeyStatistics {
+
         private Value trailingEps;
-        private Value forwardEps;          // ADICIONADO
+        private Value forwardEps;
+
         private Value priceToBook;
+        private Value bookValue;
+
         private Value profitMargins;
-        private Value enterpriseValue;     // ADICIONADO
-        private Value sharesOutstanding;   // ADICIONADO
-        private Value forwardPE;           // ADICIONADO
+
+        private Value enterpriseValue;
+        private Value sharesOutstanding;
+
+        private Value forwardPE;
         private Value lastDividendValue;
         private Value lastDividendDate;
+
+        private Value enterpriseToRevenue;
+        private Value enterpriseToEbitda;
+
+        private Value earningsQuarterlyGrowth;
+        private Value revenueQuarterlyGrowth;
+
+        private Value netIncomeToCommon;
+
+        private Value priceToSalesTrailing12Months;
     }
 
-    // ============================
-    // FINANCIAL DATA
-    // ============================
+    // ======================================================
+    // FINANCIAL DATA (FUNDAMENTALS VERSION)
+    // ======================================================
     @Data
     public static class FinancialData {
+
         private Value currentPrice;
+
         private Value returnOnAssets;
         private Value returnOnEquity;
+
         private Value totalRevenue;
         private Value ebitda;
 
-        private Value profitMargins;       // ADICIONADO
-        private Value operatingMargins;    // ADICIONADO
-        private Value grossMargins;        // ADICIONADO
-        private Value revenueGrowth;       // ADICIONADO
-        private Value earningsGrowth;      // ADICIONADO
-        private Value quickRatio;          // ADICIONADO
-        private Value currentRatio;        // ADICIONADO
+        private Value grossMargins;
+        private Value operatingMargins;
+
+        private Value revenueGrowth;
+        private Value earningsGrowth;
+
+        private Value quickRatio;
+        private Value currentRatio;
 
         private String financialCurrency;
     }
 
-    // ============================
-    // VALUE WRAPPER
-    // ============================
+    // ======================================================
     @Data
     public static class Value {
         private Double raw;

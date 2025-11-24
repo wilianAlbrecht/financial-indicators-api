@@ -23,6 +23,20 @@ public class StockData {
     private Double enterpriseValue;
     private Double sharesOutstanding;
 
+    // forward / book
+    private Double forwardEps;
+    private Double forwardPe;
+    private Double bookValue;
+    private Double priceToSalesTrailing12Months; // native Yahoo
+
+    // dividend extras
+    private Double dividendRate;
+    private Double trailingAnnualDividendYield; // NOT implementing as primary, but map if present
+
+    // returns
+    private Double ytdReturn;
+    private Double qtdReturn;
+
     // =====================================================================
     // FINANCIAL DATA
     // =====================================================================
@@ -50,6 +64,9 @@ public class StockData {
 
     private Double grossProfits;
 
+    // revenue per share (Yahoo sometimes provides)
+    private Double revenuePerShare;
+
     // =====================================================================
     // ANALYST DATA (TARGETS / RATINGS)
     // =====================================================================
@@ -61,4 +78,52 @@ public class StockData {
 
     private Double recommendationMean;
     private Double numberOfAnalystOpinions;
+
+    // =====================================================================
+    // MARKET / PRICE FIELDS
+    // =====================================================================
+
+    private Double previousClose;
+    private Double fiftyTwoWeekHigh;
+    private Double fiftyTwoWeekLow;
+    private Double allTimeHigh;
+    private Double allTimeLow;
+    private Double beta;
+    private Double regularMarketVolume;
+    private Double averageVolume;
+
+    // =====================================================================
+    // ENTERPRISE RATIOS (native)
+    // =====================================================================
+
+    private Double enterpriseToRevenue;
+    private Double enterpriseToEbitda;
+
+    // =====================================================================
+    // DEBT RATIO
+    // =====================================================================
+
+    private Double debtToEquity;
+
+    // Dividend Payout Ratio
+    private Double dividendPayoutRatio;
+
+    // Debt-to-Equity (D/E) recalculado manualmente
+    private Double debtToEquityCalculated;
+
+    // ROI
+    private Double roi;
+
+    // EV/FCFE
+    private Double evFcfe;
+
+    // ROIC Avançado
+    private Double roicAdvanced;
+
+    // Forward P/E (Price / ForwardEPS)
+    private Double forwardPeCalculated;
+
+    // DPS aprimorado (a partir do dividend rate ou TTM)
+    private Double dps;
+    private Double netIncomeToCommon;
 }
