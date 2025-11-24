@@ -1,4 +1,4 @@
-package com.financial.indicators.external.openfinancedata;
+package com.financial.indicators.external.openfinancedata.mappers;
 
 import org.springframework.stereotype.Component;
 
@@ -11,65 +11,62 @@ import com.financial.indicators.external.openfinancedata.dto.FundamentalsRespons
 import com.financial.indicators.models.StockData;
 
 @Component
-public class OpenFinanceMapper {
+public class FundamentalsMapper {
 
-    public StockData toStockData(String symbol, FundamentalsResponse dto) {
+    public StockData toStockData(StockData data, FundamentalsResponse fundamentals) {
 
-        StockData data = new StockData();
-        data.setSymbol(symbol);
+        if (data == null || fundamentals == null) return data;
 
-        if (dto == null) return data;
-
-        QuoteSummary qs = dto.getQuoteSummary();
+        QuoteSummary qs = fundamentals.getQuoteSummary();
         if (qs == null || qs.getResult() == null || qs.getResult().length == 0) return data;
 
         Result first = qs.getResult()[0];
         if (first == null) return data;
 
-        SummaryDetail summaryDetail = first.getSummaryDetail();
+        SummaryDetail summary = first.getSummaryDetail();
         DefaultKeyStatistics stats = first.getDefaultKeyStatistics();
         FinancialData fin = first.getFinancialData();
 
-        // ======================
+        // =====================================================
         // PRICE
-        // ======================
+        // =====================================================
         if (fin != null && fin.getCurrentPrice() != null) {
             data.setPrice(fin.getCurrentPrice().getRaw());
         }
 
-        // ======================
+        // =====================================================
         // EPS TTM
-        // ======================
+        // =====================================================
         if (stats != null && stats.getTrailingEps() != null) {
             data.setEpsTtm(stats.getTrailingEps().getRaw());
         }
 
-        // ======================
+        // =====================================================
         // DIVIDEND TTM
-        // ======================
-        if (summaryDetail != null && summaryDetail.getTrailingAnnualDividendRate() != null) {
-            data.setDividendTtm(summaryDetail.getTrailingAnnualDividendRate().getRaw());
+        // =====================================================
+        if (summary != null && summary.getTrailingAnnualDividendRate() != null) {
+            data.setDividendTtm(summary.getTrailingAnnualDividendRate().getRaw());
         } else if (stats != null && stats.getLastDividendValue() != null) {
             data.setDividendTtm(stats.getLastDividendValue().getRaw());
         }
 
-        // ======================
-        // PRICE-TO-BOOK
-        // ======================
+        // =====================================================
+        // PRICE/BOOK
+        // =====================================================
         if (stats != null && stats.getPriceToBook() != null) {
             data.setPriceToBook(stats.getPriceToBook().getRaw());
         }
 
-        // ======================
+        // =====================================================
         // PROFIT MARGIN
-        // ======================
+        // =====================================================
         if (stats != null && stats.getProfitMargins() != null) {
             data.setProfitMargin(stats.getProfitMargins().getRaw());
         }
 
-        // ======================
+        // =====================================================
         // RETURN ON ASSETS & EQUITY
-        // ======================
+        // =====================================================
         if (fin != null && fin.getReturnOnAssets() != null) {
             data.setReturnOnAssets(fin.getReturnOnAssets().getRaw());
         }
@@ -77,23 +74,19 @@ public class OpenFinanceMapper {
             data.setReturnOnEquity(fin.getReturnOnEquity().getRaw());
         }
 
-        // ======================
-        // ENTERPRISE VALUE
-        // ======================
+        // =====================================================
+        // ENTERPRISE VALUE & SHARES
+        // =====================================================
         if (stats != null && stats.getEnterpriseValue() != null) {
             data.setEnterpriseValue(stats.getEnterpriseValue().getRaw());
         }
-
-        // ======================
-        // SHARES OUTSTANDING
-        // ======================
         if (stats != null && stats.getSharesOutstanding() != null) {
             data.setSharesOutstanding(stats.getSharesOutstanding().getRaw());
         }
 
-        // ======================
+        // =====================================================
         // TOTAL REVENUE & EBITDA
-        // ======================
+        // =====================================================
         if (fin != null && fin.getTotalRevenue() != null) {
             data.setTotalRevenue(fin.getTotalRevenue().getRaw());
         }
@@ -101,9 +94,9 @@ public class OpenFinanceMapper {
             data.setEbitda(fin.getEbitda().getRaw());
         }
 
-        // ======================
+        // =====================================================
         // MARGINS
-        // ======================
+        // =====================================================
         if (fin != null && fin.getGrossMargins() != null) {
             data.setGrossMargin(fin.getGrossMargins().getRaw());
         }
@@ -111,13 +104,9 @@ public class OpenFinanceMapper {
             data.setOperatingMargin(fin.getOperatingMargins().getRaw());
         }
 
-        // EBITDA Margin estará disponível como:
-        // ebitda / totalRevenue — calculamos no Calculator,
-        // mas passamos os valores brutos aqui.
-
-        // ======================
+        // =====================================================
         // GROWTH
-        // ======================
+        // =====================================================
         if (fin != null && fin.getRevenueGrowth() != null) {
             data.setRevenueGrowth(fin.getRevenueGrowth().getRaw());
         }
@@ -125,9 +114,9 @@ public class OpenFinanceMapper {
             data.setEarningsGrowth(fin.getEarningsGrowth().getRaw());
         }
 
-        // ======================
-        // RATIOS
-        // ======================
+        // =====================================================
+        // LIQUIDITY RATIOS
+        // =====================================================
         if (fin != null && fin.getQuickRatio() != null) {
             data.setQuickRatio(fin.getQuickRatio().getRaw());
         }
