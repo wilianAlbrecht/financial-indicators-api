@@ -18,65 +18,121 @@ public class OpenFinanceMapper {
         StockData data = new StockData();
         data.setSymbol(symbol);
 
-        if (dto == null) {
-            return data;
-        }
+        if (dto == null) return data;
 
-        QuoteSummary quoteSummary = dto.getQuoteSummary();
-        if (quoteSummary == null) {
-            return data;
-        }
+        QuoteSummary qs = dto.getQuoteSummary();
+        if (qs == null || qs.getResult() == null || qs.getResult().length == 0) return data;
 
-        Result[] results = quoteSummary.getResult();
-        if (results == null || results.length == 0 || results[0] == null) {
-            return data;
-        }
+        Result first = qs.getResult()[0];
+        if (first == null) return data;
 
-        Result first = results[0];
-
-        // price
-        FinancialData financialData = first.getFinancialData();
-        if (financialData != null && financialData.getCurrentPrice() != null) {
-            Double currentPrice = financialData.getCurrentPrice().getRaw();
-            data.setPrice(currentPrice);
-        }
-
-        // EPS TTM - defaultKeyStatistics.trailingEps
-        DefaultKeyStatistics defaultKeyStatistics = first.getDefaultKeyStatistics();
-        if (defaultKeyStatistics != null && defaultKeyStatistics.getTrailingEps() != null) {
-            Double trailingEps = defaultKeyStatistics.getTrailingEps().getRaw();
-            data.setEpsTtm(trailingEps);
-        }
-
-        // Dividend TTM - summaryDetail.trailingAnnualDividendRate (fall back to lastDividendValue)
         SummaryDetail summaryDetail = first.getSummaryDetail();
+        DefaultKeyStatistics stats = first.getDefaultKeyStatistics();
+        FinancialData fin = first.getFinancialData();
+
+        // ======================
+        // PRICE
+        // ======================
+        if (fin != null && fin.getCurrentPrice() != null) {
+            data.setPrice(fin.getCurrentPrice().getRaw());
+        }
+
+        // ======================
+        // EPS TTM
+        // ======================
+        if (stats != null && stats.getTrailingEps() != null) {
+            data.setEpsTtm(stats.getTrailingEps().getRaw());
+        }
+
+        // ======================
+        // DIVIDEND TTM
+        // ======================
         if (summaryDetail != null && summaryDetail.getTrailingAnnualDividendRate() != null) {
-            Double trailingAnnualDividendRate = summaryDetail.getTrailingAnnualDividendRate().getRaw();
-            data.setDividendTtm(trailingAnnualDividendRate);
-        } else if (defaultKeyStatistics != null && defaultKeyStatistics.getLastDividendValue() != null) {
-            // fallback: if lastDividendValue exists (might be a single distribution)
-            Double lastDiv = defaultKeyStatistics.getLastDividendValue().getRaw();
-            data.setDividendTtm(lastDiv);
+            data.setDividendTtm(summaryDetail.getTrailingAnnualDividendRate().getRaw());
+        } else if (stats != null && stats.getLastDividendValue() != null) {
+            data.setDividendTtm(stats.getLastDividendValue().getRaw());
         }
 
-        // priceToBook and profitMargin from defaultKeyStatistics
-        if (defaultKeyStatistics != null) {
-            if (defaultKeyStatistics.getPriceToBook() != null) {
-                data.setPriceToBook(defaultKeyStatistics.getPriceToBook().getRaw());
-            }
-            if (defaultKeyStatistics.getProfitMargins() != null) {
-                data.setProfitMargin(defaultKeyStatistics.getProfitMargins().getRaw());
-            }
+        // ======================
+        // PRICE-TO-BOOK
+        // ======================
+        if (stats != null && stats.getPriceToBook() != null) {
+            data.setPriceToBook(stats.getPriceToBook().getRaw());
         }
 
-        // returnOnAssets, returnOnEquity from financialData
-        if (financialData != null) {
-            if (financialData.getReturnOnAssets() != null) {
-                data.setReturnOnAssets(financialData.getReturnOnAssets().getRaw());
-            }
-            if (financialData.getReturnOnEquity() != null) {
-                data.setReturnOnEquity(financialData.getReturnOnEquity().getRaw());
-            }
+        // ======================
+        // PROFIT MARGIN
+        // ======================
+        if (stats != null && stats.getProfitMargins() != null) {
+            data.setProfitMargin(stats.getProfitMargins().getRaw());
+        }
+
+        // ======================
+        // RETURN ON ASSETS & EQUITY
+        // ======================
+        if (fin != null && fin.getReturnOnAssets() != null) {
+            data.setReturnOnAssets(fin.getReturnOnAssets().getRaw());
+        }
+        if (fin != null && fin.getReturnOnEquity() != null) {
+            data.setReturnOnEquity(fin.getReturnOnEquity().getRaw());
+        }
+
+        // ======================
+        // ENTERPRISE VALUE
+        // ======================
+        if (stats != null && stats.getEnterpriseValue() != null) {
+            data.setEnterpriseValue(stats.getEnterpriseValue().getRaw());
+        }
+
+        // ======================
+        // SHARES OUTSTANDING
+        // ======================
+        if (stats != null && stats.getSharesOutstanding() != null) {
+            data.setSharesOutstanding(stats.getSharesOutstanding().getRaw());
+        }
+
+        // ======================
+        // TOTAL REVENUE & EBITDA
+        // ======================
+        if (fin != null && fin.getTotalRevenue() != null) {
+            data.setTotalRevenue(fin.getTotalRevenue().getRaw());
+        }
+        if (fin != null && fin.getEbitda() != null) {
+            data.setEbitda(fin.getEbitda().getRaw());
+        }
+
+        // ======================
+        // MARGINS
+        // ======================
+        if (fin != null && fin.getGrossMargins() != null) {
+            data.setGrossMargin(fin.getGrossMargins().getRaw());
+        }
+        if (fin != null && fin.getOperatingMargins() != null) {
+            data.setOperatingMargin(fin.getOperatingMargins().getRaw());
+        }
+
+        // EBITDA Margin estará disponível como:
+        // ebitda / totalRevenue — calculamos no Calculator,
+        // mas passamos os valores brutos aqui.
+
+        // ======================
+        // GROWTH
+        // ======================
+        if (fin != null && fin.getRevenueGrowth() != null) {
+            data.setRevenueGrowth(fin.getRevenueGrowth().getRaw());
+        }
+        if (fin != null && fin.getEarningsGrowth() != null) {
+            data.setEarningsGrowth(fin.getEarningsGrowth().getRaw());
+        }
+
+        // ======================
+        // RATIOS
+        // ======================
+        if (fin != null && fin.getQuickRatio() != null) {
+            data.setQuickRatio(fin.getQuickRatio().getRaw());
+        }
+        if (fin != null && fin.getCurrentRatio() != null) {
+            data.setCurrentRatio(fin.getCurrentRatio().getRaw());
         }
 
         return data;

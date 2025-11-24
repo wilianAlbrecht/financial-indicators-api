@@ -8,14 +8,41 @@ public class StockIndicators {
     private String symbol;
     private Double price;
 
-    // Calculated indicators
-    private Double earningsYield;   // % -> (EPS / Price) * 100
-    private Double dividendYield;   // % -> (DividendTTM / Price) * 100
-    private Double priceEarnings;   // P/E -> Price / EPS
+    // ====================================================
+    // Fundamental Indicators (already implemented)
+    // ====================================================
+    private Double earningsYield;     // (EPS / Price) * 100
+    private Double dividendYield;     // (DividendTTM / Price) * 100
+    private Double priceEarnings;     // Price / EPS
 
-    // Pass-through / basic ratios (may be null if not available)
-    private Double priceToBook;
-    private Double profitMargin;     // raw (0.15774) -> you can format later as %
-    private Double returnOnAssets;   // raw (0.07919)
-    private Double returnOnEquity;   // raw (0.19022)
+    private Double priceToBook;       // raw
+    private Double profitMargin;      // raw (0.15774)
+    private Double returnOnAssets;    // ROA
+    private Double returnOnEquity;    // ROE
+
+    // ====================================================
+    // NEW Indicators from Fundamentals (now supported)
+    // ====================================================
+
+    // Valuation
+    private Double psRatio;           // Price / (Revenue per share)
+    private Double evEbitda;          // Enterprise Value / EBITDA
+    private Double pegRatio;          // PE / earningsGrowth
+
+    // Market Metrics
+    private Double marketCap;         // price * sharesOutstanding
+    private Double evRevenue;         // EV / Revenue
+
+    // Margins
+    private Double grossMargin;       // grossMargins.raw
+    private Double operatingMargin;   // operatingMargins.raw
+    private Double ebitdaMargin;      // EBITDA / Revenue
+
+    // Growth
+    private Double revenueGrowth;     // revenueGrowth.raw
+    private Double earningsGrowth;    // earningsGrowth.raw
+
+    // Liquidity Ratios
+    private Double currentRatio;      // currentRatio.raw
+    private Double quickRatio;        // quickRatio.raw
 }
