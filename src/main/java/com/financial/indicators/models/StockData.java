@@ -18,7 +18,7 @@ public class StockData {
     // Dividendos
     private BigDecimal exDividendDate;
     private BigDecimal fiveYearAvgDividendYield;
-    private BigDecimal dividendTtm;
+    private BigDecimal dividendForward;
     private BigDecimal lastDividendValue;
 
     // Lucros
@@ -111,4 +111,9 @@ public class StockData {
     private BigDecimal volume;
     private BigDecimal dividendYield;
     private BigDecimal marketCap;
+
+
+    // ===========================History Dividends Data=========================
+    private BigDecimal dividendTrueTtm;
+
 }

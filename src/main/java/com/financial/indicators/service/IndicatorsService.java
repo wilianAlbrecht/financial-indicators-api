@@ -27,7 +27,7 @@ public class IndicatorsService {
         // ========================= DIVIDENDOS ================================
         indicadores.setExDividendDate(data.getExDividendDate());
         indicadores.setFiveYearAvgDividendYield(data.getFiveYearAvgDividendYield());
-        indicadores.setDividendTtm(data.getDividendTtm());
+        indicadores.setDividendForward(data.getDividendForward());
         indicadores.setLastDividendValue(data.getLastDividendValue());
         indicadores.setDividendRate(data.getDividendRate());
         indicadores.setTrailingAnnualDividendYield(data.getTrailingAnnualDividendYield());
@@ -94,13 +94,19 @@ public class IndicatorsService {
         // ===========================indicadores que precisam de
         // calculos================================//
 
+        indicadores.setDividendTtm(data.getDividendTrueTtm());
+
         // Earnings Yield
         if (!isNullOrZero(data.getEpsTtm()) && !isNullOrZero(data.getPrice())) {
             indicadores.setEarningsYield(
                     bdDivide(data.getEpsTtm(), data.getPrice()));
         }
 
-        // todo: dividend yield
+        //dividend Yield TTM calculado
+        if (!isNullOrZero(data.getDividendTrueTtm()) && !isNullOrZero(data.getPrice())) {
+            indicadores.setDividendYieldTtm(
+                    bdDivide(data.getDividendTrueTtm(), data.getPrice()));
+        }
 
         // Market Cap Recalculado
         if (!isNullOrZero(data.getPrice())

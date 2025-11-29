@@ -48,7 +48,7 @@ public class FundamentalsMapper {
             data.setMarketCap(toBig(summary.getMarketCap()));
 
             // DIVIDENDS
-            data.setDividendTtm(toBig(summary.getTrailingAnnualDividendRate()));
+            data.setDividendForward(toBig(summary.getTrailingAnnualDividendRate()));
             data.setTrailingAnnualDividendYield(toBig(summary.getTrailingAnnualDividendYield()));
             data.setDividendRate(toBig(summary.getDividendRate()));
             data.setDividendYield(toBig(summary.getDividendYield()));

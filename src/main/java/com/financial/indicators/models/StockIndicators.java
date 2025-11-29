@@ -19,7 +19,7 @@ public class StockIndicators {
     // ========================= DIVIDENDOS ================================
     private BigDecimal exDividendDate; 
     private BigDecimal fiveYearAvgDividendYield;   
-    private BigDecimal dividendTtm;             
+    private BigDecimal dividendForward;             
     private BigDecimal lastDividendValue;
     private BigDecimal dividendRate;
     private BigDecimal trailingAnnualDividendYield;
@@ -92,4 +92,7 @@ public class StockIndicators {
     private BigDecimal operatingCashflowPerShare;
     private BigDecimal freeCashFlowYield;               
     private BigDecimal pegRatio;
+
+    private BigDecimal dividendTtm;
+    private BigDecimal dividendYieldTtm;
 }
