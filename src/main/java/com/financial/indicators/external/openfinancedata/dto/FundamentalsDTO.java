@@ -22,7 +22,7 @@ public class FundamentalsDTO {
     }
 
     // ======================================================
-    // SUMMARY DETAIL (JSON REAL)
+    // SUMMARY DETAIL 
     // ======================================================
     @Data
     public static class SummaryDetail {
@@ -63,13 +63,22 @@ public class FundamentalsDTO {
         private Value averageVolume;
         private Value regularMarketVolume;
 
+        private Value exDividendDate;
+        private Value fiveYearAvgDividendYield;
+
+        private Value fiftyDayAverage;
+        private Value twoHundredDayAverage;
+
         private Value bid;
         private Value ask;
         private Value volume;
+
+        private Value averageVolume10days;
+        private Value averageDailyVolume10Day;
     }
 
     // ======================================================
-    // DEFAULT KEY STATISTICS  (JSON REAL)
+    // DEFAULT KEY STATISTICS 
     // ======================================================
     @Data
     public static class DefaultKeyStatistics {
@@ -98,15 +107,23 @@ public class FundamentalsDTO {
         private Value netIncomeToCommon;
 
         private Value priceToSalesTrailing12Months;
+        private Value pegRatio;
+
+        private Value lastFiscalYearEnd;
+        private Value nextFiscalYearEnd;
+
+        private Value mostRecentQuarter;
     }
 
     // ======================================================
-    // FINANCIAL DATA (FUNDAMENTALS VERSION)
+    // FINANCIAL DATA
     // ======================================================
     @Data
     public static class FinancialData {
 
         private Value currentPrice;
+
+        private Value freeCashflow;
 
         private Value returnOnAssets;
         private Value returnOnEquity;
@@ -124,6 +141,30 @@ public class FundamentalsDTO {
         private Value currentRatio;
 
         private String financialCurrency;
+        private Value totalCash;
+
+        private Value totalCashPerShare;
+        private Value totalDebt;
+
+        private Value grossProfits;
+        private Value revenuePerShare;
+        
+        private Value targetHighPrice;
+        private Value targetLowPrice;
+
+        private Value targetMeanPrice;
+        private Value targetMedianPrice;
+
+        private Value recommendationMean;
+        private String recommendationKey;
+
+        private Value numberOfAnalystOpinions;
+        private Value ebitdaMargins;
+
+        private Value debtToEquity;
+        private Value operatingCashflow;
+
+
     }
 
     // ======================================================

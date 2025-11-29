@@ -1,123 +1,95 @@
 package com.financial.indicators.models;
 
-import lombok.Data;
+import java.math.BigDecimal;
 
+import com.financial.indicators.config.StockIndicatorsSerializer;
+
+import lombok.Data;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+
+@JsonSerialize(using = StockIndicatorsSerializer.class)
 @Data
 public class StockIndicators {
 
     private String symbol;
-    private Double price;
 
-    // ====================================================
-    // Fundamental Indicators (already implemented)
-    // ====================================================
-    private Double earningsYield; // (EPS / Price) * 100
-    private Double dividendYield; // (DividendTTM / Price) * 100
-    private Double priceEarnings; // Price / EPS
+    private BigDecimal price;
 
-    private Double priceToBook; // raw
-    private Double profitMargin; // raw (0.15774)
-    private Double returnOnAssets; // ROA
-    private Double returnOnEquity; // ROE
+    // ========================= DIVIDENDOS ================================
+    private BigDecimal exDividendDate; 
+    private BigDecimal fiveYearAvgDividendYield;   
+    private BigDecimal dividendTtm;             
+    private BigDecimal lastDividendValue;
+    private BigDecimal dividendRate;
+    private BigDecimal trailingAnnualDividendYield;
+    private BigDecimal dividendYield;               
+    private BigDecimal lastDividendDate;
 
-    // ====================================================
-    // NEW Indicators from Fundamentals (now supported)
-    // ====================================================
+    // ======================== LUCROS (EPS) ================================
+    private BigDecimal epsTtm;
+    private BigDecimal forwardEps;
 
-    // Valuation
-    private Double psRatio; // Price / (Revenue per share)
-    private Double evEbitda; // Enterprise Value / EBITDA
-    private Double pegRatio; // PE / earningsGrowth
+    // ======================= VALUATION ==================================
+    private BigDecimal priceToBook;                 
+    private BigDecimal bookValue;               
+    private BigDecimal enterpriseValue;
+    private BigDecimal enterpriseToRevenue;
+    private BigDecimal enterpriseToEbitda;
+    private BigDecimal profitMargin;
+    private BigDecimal marketCap;               
 
-    // Market Metrics
-    private Double marketCap; // price * sharesOutstanding
-    private Double evRevenue; // EV / Revenue
+    // ======================= RENTABILIDADE ===============================
+    private BigDecimal returnOnAssets;
+    private BigDecimal returnOnEquity;
 
-    // Margins
-    private Double grossMargin; // grossMargins.raw
-    private Double operatingMargin; // operatingMargins.raw
-    private Double ebitdaMargin; // EBITDA / Revenue
+    // ======================= ESTRUTURA DE CAPITAL ========================
+    private BigDecimal totalDebt;
+    private BigDecimal debtToEquity;
+    private BigDecimal sharesOutstanding;
 
-    // Growth
-    private Double revenueGrowth; // revenueGrowth.raw
-    private Double earningsGrowth; // earningsGrowth.raw
+    // ======================= CRESCIMENTO ================================
+    private BigDecimal revenueGrowth;
+    private BigDecimal earningsGrowth;
 
-    // Liquidity Ratios
-    private Double currentRatio; // currentRatio.raw
-    private Double quickRatio; // quickRatio.raw
+    // ======================= MARGENS ====================================
+    private BigDecimal grossMargin;
+    private BigDecimal operatingMargin;
+    private BigDecimal ebitdaMargin;
+    private BigDecimal grossProfits;
 
-    private Double totalCash;
-    private Double totalDebt;
-    private Double cashPerShare;
+    // ======================= FLUXO DE CAIXA ==============================
+    private BigDecimal operatingCashflow;
+    private BigDecimal freeCashFlow;
+    private BigDecimal totalCash;
+    private BigDecimal totalCashPerShare;
 
-    private Double freeCashFlow;
-    private Double freeCashFlowYield;
-    private Double operatingCashflowPerShare;
+    // ======================= RECEITAS ====================================
+    private BigDecimal totalRevenue;
+    private BigDecimal revenuePerShare;
 
-    private Double evFcf;
-    private Double roic;
+    // ======================= ANALISTAS ===================================
+    private BigDecimal targetHighPrice;
+    private BigDecimal targetLowPrice;
+    private BigDecimal targetMeanPrice;
+    private BigDecimal targetMedianPrice;
+    private BigDecimal recommendationMean;
+    private BigDecimal numberOfAnalystOpinions;
 
-    private Double grossProfits;
-    private Double grossProfitMargin;
+    // ======================= MERCADO / DADOS GERAIS ======================
+    private BigDecimal previousClose;
+    private BigDecimal fiftyTwoWeekHigh;
+    private BigDecimal fiftyTwoWeekLow;
+    private BigDecimal beta;
+    private BigDecimal averageVolume;
+    private BigDecimal volume;
 
-    private Double targetHighPrice;
-    private Double targetLowPrice;
-    private Double targetMeanPrice;
-    private Double targetMedianPrice;
-
-    private Double recommendationMean;
-    private Double numberOfAnalystOpinions;
-
-    // ===================== NEW FIELDS (implemented now) =====================
-
-    // Forward / Book / Native PS
-    private Double forwardEps;
-    private Double forwardPe;
-    private Double bookValue;
-    private Double priceToSalesTrailing12Months;
-
-    // Dividend extras / returns
-    private Double dividendRate;
-    private Double ytdReturn;
-    private Double qtdReturn;
-
-    // Market / price fields
-    private Double previousClose;
-    private Double fiftyTwoWeekHigh;
-    private Double fiftyTwoWeekLow;
-    private Double allTimeHigh;
-    private Double allTimeLow;
-    private Double beta;
-    private Double regularMarketVolume;
-    private Double averageVolume;
-
-    // Enterprise native ratios
-    private Double enterpriseToRevenue;
-    private Double enterpriseToEbitda;
-
-    // Debt ratio native
-    private Double debtToEquity;
-
-    // revenue per share native
-    private Double revenuePerShare;
-    // Dividend Payout Ratio
-    private Double dividendPayoutRatio;
-
-    // Debt-to-Equity (D/E) recalculado manualmente
-    private Double debtToEquityCalculated;
-
-    // ROI
-    private Double roi;
-
-    // EV/FCFE
-    private Double evFcfe;
-
-    // ROIC Avançado
-    private Double roicAdvanced;
-
-    // Forward P/E (Price / ForwardEPS)
-    private Double forwardPeCalculated;
-
-    // DPS aprimorado (a partir do dividend rate ou TTM)
-    private Double dps;
+    // ======================== INDICADORES CALCULADOS ======================
+    private BigDecimal earningsYield;
+    private BigDecimal priceToEarnings;
+    private BigDecimal priceToSales;
+    private BigDecimal cashPerShare;                
+    private BigDecimal operatingCashflowPerShare;
+    private BigDecimal freeCashFlowYield;               
+    private BigDecimal pegRatio;
 }

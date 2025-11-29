@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.financial.indicators.config.JsonFormatter;
 import com.financial.indicators.external.openfinancedata.OpenFinanceDataClient;
 import com.financial.indicators.external.openfinancedata.dto.FundamentalsDTO;
 import com.financial.indicators.external.openfinancedata.mappers.FundamentalsMapper;
@@ -26,7 +27,7 @@ public class IndicatorsController {
     }
 
     @GetMapping("/api/stock/{symbol}")
-    public ResponseEntity<StockIndicators> getIndicators(@PathVariable String symbol) {
+    public ResponseEntity<String> getIndicators(@PathVariable String symbol) {
 
         FundamentalsDTO fundamentals = client.getFundamentals(symbol);
 
@@ -37,6 +38,8 @@ public class IndicatorsController {
         
         StockIndicators indicators = service.calculate(data);
 
-        return ResponseEntity.ok(indicators);
+        String json = JsonFormatter.stringify(indicators);
+
+        return ResponseEntity.ok(json);
     }
 }

@@ -1,129 +1,114 @@
 package com.financial.indicators.models;
 
 import lombok.Data;
+import java.math.BigDecimal;
 
 @Data
 public class StockData {
 
     private String symbol;
-    private Double price;
+
+    // Preço é dinheiro
+    private BigDecimal price;
 
     // =====================================================================
-    // FUNDAMENTALS DATA
+    // ========================= FUNDAMENTALS DATA ==========================
     // =====================================================================
 
-    private Double epsTtm;
-    private Double dividendTtm;
+    // Dividendos
+    private BigDecimal exDividendDate;
+    private BigDecimal fiveYearAvgDividendYield;
+    private BigDecimal dividendTtm;
+    private BigDecimal lastDividendValue;
 
-    private Double priceToBook;
-    private Double profitMargin;
-    private Double returnOnAssets;
-    private Double returnOnEquity;
+    // Lucros
+    private BigDecimal epsTtm;
 
-    private Double enterpriseValue;
-    private Double sharesOutstanding;
+    // Valor patrimonial
+    private BigDecimal priceToBook;
+    private BigDecimal profitMargin;
 
-    // forward / book
-    private Double forwardEps;
-    private Double forwardPe;
-    private Double bookValue;
-    private Double priceToSalesTrailing12Months; // native Yahoo
+    // ROA / ROE (proporções)
+    private BigDecimal returnOnAssets;
+    private BigDecimal returnOnEquity;
 
-    // dividend extras
-    private Double dividendRate;
-    private Double trailingAnnualDividendYield; // NOT implementing as primary, but map if present
+    // Enterprise
+    private BigDecimal enterpriseValue;
+    private BigDecimal sharesOutstanding;
 
-    // returns
-    private Double ytdReturn;
-    private Double qtdReturn;
+    // EPS forward e book value
+    private BigDecimal forwardEps;
+    private BigDecimal bookValue;
 
-    // =====================================================================
-    // FINANCIAL DATA
-    // =====================================================================
-
-    private Double totalRevenue;
-    private Double ebitda;
-
-    private Double grossMargin;
-    private Double operatingMargin;
-    private Double ebitdaMargin; // opcional para debug
-
-    private Double revenueGrowth;
-    private Double earningsGrowth;
-
-    private Double quickRatio;
-    private Double currentRatio;
-
-    private Double totalDebt;
-
-    private Double totalCash;
-    private Double totalCashPerShare;
-
-    private Double freeCashFlow;
-    private Double operatingCashflow;
-
-    private Double grossProfits;
-
-    // revenue per share (Yahoo sometimes provides)
-    private Double revenuePerShare;
+    private BigDecimal dividendRate;
+    private BigDecimal trailingAnnualDividendYield;
 
     // =====================================================================
-    // ANALYST DATA (TARGETS / RATINGS)
+    // =========================== FINANCIAL DATA ============================
     // =====================================================================
 
-    private Double targetHighPrice;
-    private Double targetLowPrice;
-    private Double targetMeanPrice;
-    private Double targetMedianPrice;
+    private BigDecimal totalRevenue;
+    private BigDecimal ebitda;
 
-    private Double recommendationMean;
-    private Double numberOfAnalystOpinions;
+    private BigDecimal grossMargin;
+    private BigDecimal operatingMargin;
+    private BigDecimal ebitdaMargin;
 
-    // =====================================================================
-    // MARKET / PRICE FIELDS
-    // =====================================================================
+    private BigDecimal revenueGrowth;
+    private BigDecimal earningsGrowth;
 
-    private Double previousClose;
-    private Double fiftyTwoWeekHigh;
-    private Double fiftyTwoWeekLow;
-    private Double allTimeHigh;
-    private Double allTimeLow;
-    private Double beta;
-    private Double regularMarketVolume;
-    private Double averageVolume;
+    private BigDecimal quickRatio;
+    private BigDecimal currentRatio;
 
-    // =====================================================================
-    // ENTERPRISE RATIOS (native)
-    // =====================================================================
+    private BigDecimal totalDebt;
+    private BigDecimal totalCash;
+    private BigDecimal totalCashPerShare;
 
-    private Double enterpriseToRevenue;
-    private Double enterpriseToEbitda;
+    private BigDecimal operatingCashflow;
+    private BigDecimal grossProfits;
+    private BigDecimal freeCashFlow;
+
+    private BigDecimal revenuePerShare;
 
     // =====================================================================
-    // DEBT RATIO
+    // ====================== ANALYST DATA (TARGETS / RATINGS) ==============
     // =====================================================================
 
-    private Double debtToEquity;
+    private BigDecimal targetHighPrice;
+    private BigDecimal targetLowPrice;
+    private BigDecimal targetMeanPrice;
+    private BigDecimal targetMedianPrice;
 
-    // Dividend Payout Ratio
-    private Double dividendPayoutRatio;
+    private BigDecimal recommendationMean;
+    private BigDecimal numberOfAnalystOpinions;
 
-    // Debt-to-Equity (D/E) recalculado manualmente
-    private Double debtToEquityCalculated;
+    // =====================================================================
+    // ========================== MARKET / PRICE FIELDS =====================
+    // =====================================================================
 
-    // ROI
-    private Double roi;
+    private BigDecimal previousClose;
+    private BigDecimal fiftyTwoWeekHigh;
+    private BigDecimal fiftyTwoWeekLow;
+    private BigDecimal beta;
+    private BigDecimal averageVolume;
 
-    // EV/FCFE
-    private Double evFcfe;
+    // =====================================================================
+    // ======================= ENTERPRISE RATIOS =============================
+    // =====================================================================
 
-    // ROIC Avançado
-    private Double roicAdvanced;
+    private BigDecimal enterpriseToRevenue;
+    private BigDecimal enterpriseToEbitda;
 
-    // Forward P/E (Price / ForwardEPS)
-    private Double forwardPeCalculated;
+    // =====================================================================
+    // ============================== DEBT RATIO ============================
+    // =====================================================================
 
-    // DPS aprimorado (a partir do dividend rate ou TTM)
-    private Double dps;
-    private Double netIncomeToCommon;
+    private BigDecimal debtToEquity;
+
+    private BigDecimal netIncomeToCommon;
+
+    private BigDecimal lastDividendDate;
+    private BigDecimal volume;
+    private BigDecimal dividendYield;
+    private BigDecimal marketCap;
 }

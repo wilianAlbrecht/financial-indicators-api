@@ -1,5 +1,8 @@
 package com.financial.indicators.service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import org.springframework.stereotype.Service;
 
 import com.financial.indicators.models.StockData;
@@ -10,249 +13,170 @@ public class IndicatorsService {
 
     public StockIndicators calculate(StockData data) {
 
-        StockIndicators ind = new StockIndicators();
-        if (data == null)
-            return ind;
+        StockIndicators indicadores = new StockIndicators();
 
-        // ==============================================
-        // BASIC FIELDS
-        // ==============================================
-        ind.setSymbol(data.getSymbol());
-        ind.setPrice(data.getPrice());
+        // ===========================indicadores que ja vem do
+        // OpenFinanceData============================//
+        // ===========================sem necessidade de
+        // calculos=========================================//
 
-        Double price = data.getPrice();
-        Double eps = data.getEpsTtm();
-        Double dividendTtm = data.getDividendTtm();
-        Double shares = data.getSharesOutstanding();
-        Double revenue = data.getTotalRevenue();
-        Double ebitda = data.getEbitda();
-        Double enterpriseValue = data.getEnterpriseValue();
+        // Identificação
+        indicadores.setSymbol(data.getSymbol());
+        indicadores.setPrice(data.getPrice());
 
-        // ==============================================
-        // BASIC INDICATORS
-        // ==============================================
+        // ========================= DIVIDENDOS ================================
+        indicadores.setExDividendDate(data.getExDividendDate());
+        indicadores.setFiveYearAvgDividendYield(data.getFiveYearAvgDividendYield());
+        indicadores.setDividendTtm(data.getDividendTtm());
+        indicadores.setLastDividendValue(data.getLastDividendValue());
+        indicadores.setDividendRate(data.getDividendRate());
+        indicadores.setTrailingAnnualDividendYield(data.getTrailingAnnualDividendYield());
+        indicadores.setDividendYield(data.getDividendYield());
+        indicadores.setLastDividendDate(data.getLastDividendDate());
 
-        if (eps != null && price != null && price != 0) {
-            ind.setEarningsYield((eps / price) * 100);
+        // ======================== LUCROS (EPS) ================================
+        indicadores.setEpsTtm(data.getEpsTtm());
+        indicadores.setForwardEps(data.getForwardEps());
+
+        // ======================= VALUATION ==================================
+        indicadores.setPriceToBook(data.getPriceToBook());
+        indicadores.setBookValue(data.getBookValue());
+        indicadores.setEnterpriseValue(data.getEnterpriseValue());
+        indicadores.setEnterpriseToRevenue(data.getEnterpriseToRevenue());
+        indicadores.setEnterpriseToEbitda(data.getEnterpriseToEbitda());
+        indicadores.setProfitMargin(data.getProfitMargin());
+
+        // ======================= RENTABILIDADE ===============================
+        indicadores.setReturnOnAssets(data.getReturnOnAssets());
+        indicadores.setReturnOnEquity(data.getReturnOnEquity());
+
+        // ======================= ESTRUTURA DE CAPITAL ========================
+        indicadores.setTotalDebt(data.getTotalDebt());
+        indicadores.setDebtToEquity(data.getDebtToEquity());
+        indicadores.setSharesOutstanding(data.getSharesOutstanding());
+
+        // ======================= CRESCIMENTO ================================
+        indicadores.setRevenueGrowth(data.getRevenueGrowth());
+        indicadores.setEarningsGrowth(data.getEarningsGrowth());
+
+        // ======================= MARGENS ====================================
+        indicadores.setGrossMargin(data.getGrossMargin());
+        indicadores.setOperatingMargin(data.getOperatingMargin());
+        indicadores.setEbitdaMargin(data.getEbitdaMargin());
+        indicadores.setGrossProfits(data.getGrossProfits());
+
+        // ======================= FLUXO DE CAIXA ==============================
+        indicadores.setOperatingCashflow(data.getOperatingCashflow());
+        indicadores.setFreeCashFlow(data.getFreeCashFlow());
+        indicadores.setTotalCash(data.getTotalCash());
+        indicadores.setTotalCashPerShare(data.getTotalCashPerShare());
+
+        // ======================= RECEITAS ====================================
+        indicadores.setTotalRevenue(data.getTotalRevenue());
+        indicadores.setRevenuePerShare(data.getRevenuePerShare());
+
+        // ======================= ANALISTAS ===================================
+        indicadores.setTargetHighPrice(data.getTargetHighPrice());
+        indicadores.setTargetLowPrice(data.getTargetLowPrice());
+        indicadores.setTargetMeanPrice(data.getTargetMeanPrice());
+        indicadores.setTargetMedianPrice(data.getTargetMedianPrice());
+        indicadores.setRecommendationMean(data.getRecommendationMean());
+        indicadores.setNumberOfAnalystOpinions(data.getNumberOfAnalystOpinions());
+
+        // ======================= MERCADO / DADOS GERAIS ======================
+        indicadores.setPreviousClose(data.getPreviousClose());
+        indicadores.setFiftyTwoWeekHigh(data.getFiftyTwoWeekHigh());
+        indicadores.setFiftyTwoWeekLow(data.getFiftyTwoWeekLow());
+        indicadores.setBeta(data.getBeta());
+        indicadores.setAverageVolume(data.getAverageVolume());
+        indicadores.setVolume(data.getVolume());
+
+        // ===========================indicadores que precisam de
+        // calculos================================//
+
+        // Earnings Yield
+        if (!isNullOrZero(data.getEpsTtm()) && !isNullOrZero(data.getPrice())) {
+            indicadores.setEarningsYield(
+                    bdDivide(data.getEpsTtm(), data.getPrice()));
         }
 
-        if (dividendTtm != null && price != null && price != 0) {
-            ind.setDividendYield((dividendTtm / price) * 100);
+        // todo: dividend yield
+
+        // Market Cap Recalculado
+        if (!isNullOrZero(data.getPrice())
+                && !isNullOrZero(data.getSharesOutstanding())) {
+
+            indicadores.setMarketCap(
+                    bdMultiply(data.getPrice(), data.getSharesOutstanding()));
         }
 
-        if (eps != null && eps != 0 && price != null) {
-            ind.setPriceEarnings(price / eps);
+        // FREE CASH FLOW YIELD
+        if (!isNullOrZero(data.getFreeCashFlow())
+                && !isNullOrZero(indicadores.getMarketCap())) {
+
+            indicadores.setFreeCashFlowYield(
+                    bdDivide(data.getFreeCashFlow(), indicadores.getMarketCap()));
         }
 
-        // ==============================================
-        // PASS-THROUGH FUNDAMENTALS
-        // ==============================================
-        ind.setPriceToBook(data.getPriceToBook());
-        ind.setProfitMargin(data.getProfitMargin());
-        ind.setReturnOnAssets(data.getReturnOnAssets());
-        ind.setReturnOnEquity(data.getReturnOnEquity());
-        ind.setCurrentRatio(data.getCurrentRatio());
-        ind.setQuickRatio(data.getQuickRatio());
-        ind.setGrossMargin(data.getGrossMargin());
-        ind.setOperatingMargin(data.getOperatingMargin());
-        ind.setRevenueGrowth(data.getRevenueGrowth());
-        ind.setEarningsGrowth(data.getEarningsGrowth());
+        // PEG Ratio
+        if (!isNullOrZero(data.getPrice())
+                && !isNullOrZero(data.getEpsTtm())
+                && !isNullOrZero(data.getEarningsGrowth())) {
 
-        // ==============================================
-        // MARKET CAP
-        // ==============================================
-        if (price != null && shares != null) {
-            ind.setMarketCap(price * shares);
-        }
+            BigDecimal pe = bdDivide(data.getPrice(), data.getEpsTtm());
 
-        // ==============================================
-        // PRICE / SALES
-        // ==============================================
-        if (price != null && revenue != null && revenue != 0 && shares != null && shares != 0) {
-            double revenuePerShare = revenue / shares;
-            if (revenuePerShare != 0) {
-                ind.setPsRatio(price / revenuePerShare);
+            if (!isNullOrZero(pe)) {
+                indicadores.setPegRatio(
+                        bdDivide(pe, data.getEarningsGrowth()));
             }
         }
 
-        // ==============================================
-        // EV / EBITDA
-        // ==============================================
-        if (enterpriseValue != null && ebitda != null && ebitda != 0) {
-            ind.setEvEbitda(enterpriseValue / ebitda);
+        // Price/Earnings (P/E)
+        if (!isNullOrZero(data.getEpsTtm()) && !isNullOrZero(data.getPrice())) {
+            indicadores.setPriceToEarnings(
+                    bdDivide(data.getPrice(), data.getEpsTtm()));
         }
 
-        // ==============================================
-        // EV / REVENUE
-        // ==============================================
-        if (enterpriseValue != null && revenue != null && revenue != 0) {
-            ind.setEvRevenue(enterpriseValue / revenue);
+        // Price/Sales (P/S)
+        if (!isNullOrZero(data.getTotalRevenue())
+                && !isNullOrZero(data.getSharesOutstanding())
+                && !isNullOrZero(data.getPrice())) {
+
+            BigDecimal revenuePerShare = bdDivide(data.getTotalRevenue(), data.getSharesOutstanding());
+
+            indicadores.setPriceToSales(
+                    bdDivide(data.getPrice(), revenuePerShare));
         }
-
-        // ==============================================
-        // EBITDA MARGIN
-        // ==============================================
-        if (ebitda != null && revenue != null && revenue != 0) {
-            ind.setEbitdaMargin(ebitda / revenue);
-        }
-
-        // ==============================================
-        // PEG RATIO
-        // ==============================================
-        if (ind.getPriceEarnings() != null &&
-                data.getEarningsGrowth() != null &&
-                data.getEarningsGrowth() != 0) {
-
-            ind.setPegRatio(ind.getPriceEarnings() / data.getEarningsGrowth());
-        }
-
-        // ==============================================
-        // FINANCIAL DATA COPY (NEW)
-        // ==============================================
-
-        ind.setTotalCash(data.getTotalCash());
-        ind.setTotalDebt(data.getTotalDebt());
-        ind.setGrossProfits(data.getGrossProfits());
-        ind.setRecommendationMean(data.getRecommendationMean());
-        ind.setNumberOfAnalystOpinions(data.getNumberOfAnalystOpinions());
-        ind.setTargetHighPrice(data.getTargetHighPrice());
-        ind.setTargetLowPrice(data.getTargetLowPrice());
-        ind.setTargetMeanPrice(data.getTargetMeanPrice());
-        ind.setTargetMedianPrice(data.getTargetMedianPrice());
-        ind.setFreeCashFlow(data.getFreeCashFlow());
-
-        // ==============================================
-        // CALCULATED FINANCIAL DATA INDICATORS (NEW)
-        // ==============================================
 
         // Cash Per Share
-        if (data.getTotalCash() != null &&
-                shares != null && shares != 0) {
+        if (!isNullOrZero(data.getTotalCash())
+                && !isNullOrZero(data.getSharesOutstanding())) {
 
-            ind.setCashPerShare(data.getTotalCash() / shares);
-        }
-
-        // Free Cash Flow Yield
-        if (ind.getMarketCap() != null &&
-                data.getFreeCashFlow() != null &&
-                ind.getMarketCap() != 0) {
-
-            ind.setFreeCashFlowYield(data.getFreeCashFlow() / ind.getMarketCap());
+            indicadores.setCashPerShare(
+                    bdDivide(data.getTotalCash(), data.getSharesOutstanding()));
         }
 
         // Operating Cashflow Per Share
-        if (data.getOperatingCashflow() != null &&
-                shares != null && shares != 0) {
+        if (!isNullOrZero(data.getOperatingCashflow())
+                && !isNullOrZero(data.getSharesOutstanding())) {
 
-            ind.setOperatingCashflowPerShare(data.getOperatingCashflow() / shares);
+            indicadores.setOperatingCashflowPerShare(
+                    bdDivide(data.getOperatingCashflow(), data.getSharesOutstanding()));
         }
 
-        // EV / FCF
-        if (enterpriseValue != null &&
-                data.getFreeCashFlow() != null &&
-                data.getFreeCashFlow() != 0) {
-
-            ind.setEvFcf(enterpriseValue / data.getFreeCashFlow());
-        }
-
-        // ROIC = FCF / EV
-        if (data.getFreeCashFlow() != null &&
-                enterpriseValue != null &&
-                enterpriseValue != 0) {
-
-            ind.setRoic(data.getFreeCashFlow() / enterpriseValue);
-        }
-
-        // Gross Profit Margin
-        if (data.getGrossProfits() != null &&
-                revenue != null &&
-                revenue != 0) {
-
-            ind.setGrossProfitMargin(data.getGrossProfits() / revenue);
-        }
-
-        // =============================================================
-        // NOVOS CÁLCULOS – INDICADORES AVANÇADOS
-        // =============================================================
-
-        // ---------------------------------------
-        // 1. Dividend Payout Ratio
-        // ---------------------------------------
-        if (eps != null && eps != 0 && dividendTtm != null) {
-            ind.setDividendPayoutRatio(dividendTtm / eps);
-        }
-
-        // ---------------------------------------
-        // 2. D/E (Debt-to-Equity) Recalculado
-        // ---------------------------------------
-        Double bookValue = data.getBookValue();
-        Double equity = null;
-
-        if (bookValue != null && shares != null) {
-            equity = bookValue * shares;
-        }
-
-        Double totalDebt = data.getTotalDebt();
-        if (totalDebt != null && equity != null && equity != 0) {
-            ind.setDebtToEquityCalculated(totalDebt / equity);
-        }
-
-        // ---------------------------------------
-        // 3. ROI (Return on Investment)
-        // ROI = NetIncome / (Debt + Equity)
-        // ---------------------------------------
-        Double netIncome = data.getNetIncomeToCommon();
-
-        if (netIncome != null && totalDebt != null && equity != null && (equity + totalDebt) != 0) {
-            ind.setRoi(netIncome / (equity + totalDebt));
-        }
-
-        // ---------------------------------------
-        // 4. EV / FCFE
-        // FCFE ≈ FCF (aproximação simplificada)
-        // ---------------------------------------
-        Double fcf = data.getFreeCashFlow();
-        if (enterpriseValue != null && fcf != null && fcf != 0) {
-            ind.setEvFcfe(enterpriseValue / fcf);
-        }
-
-        // ---------------------------------------
-        // 5. ROIC Avançado
-        // ROIC = NOPAT / InvestedCapital
-        // NOPAT ≈ NetIncome * (1 - TaxRate)
-        // TaxRate fixo BR = 34%
-        // ---------------------------------------
-        Double taxRate = 0.34;
-
-        if (netIncome != null && equity != null && totalDebt != null) {
-            Double nopat = netIncome * (1 - taxRate);
-            Double investedCapital = equity + totalDebt;
-
-            if (investedCapital != 0) {
-                ind.setRoicAdvanced(nopat / investedCapital);
-            }
-        }
-
-        // ---------------------------------------
-        // 6. Forward P/E
-        // forwardPE = Price / ForwardEPS
-        // ---------------------------------------
-        Double forwardEps = data.getForwardEps();
-        if (forwardEps != null && forwardEps != 0 && price != null) {
-            ind.setForwardPeCalculated(price / forwardEps);
-        }
-
-        // ---------------------------------------
-        // 7. DPS Aprimorado
-        // DPS = DividendRate se existir → senão DividendTTM
-        // ---------------------------------------
-        Double dividendRate = data.getDividendRate();
-        if (dividendRate != null) {
-            ind.setDps(dividendRate);
-        } else if (dividendTtm != null) {
-            ind.setDps(dividendTtm);
-        }
-
-        return ind;
+        return indicadores;
     }
+
+    private boolean isNullOrZero(BigDecimal v) {
+        return v == null || v.compareTo(BigDecimal.ZERO) == 0;
+    }
+
+    private BigDecimal bdDivide(BigDecimal a, BigDecimal b) {
+        return a.divide(b, 12, RoundingMode.HALF_UP); // precisão padrão
+    }
+
+    private BigDecimal bdMultiply(BigDecimal a, BigDecimal b) {
+        return a.multiply(b);
+    }
+
 }
