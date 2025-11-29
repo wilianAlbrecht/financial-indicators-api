@@ -3,7 +3,7 @@ package com.financial.indicators.external.openfinancedata.dto;
 import lombok.Data;
 
 @Data
-public class FundamentalsResponse {
+public class FundamentalsDTO {
 
     private QuoteSummary quoteSummary;
 
