@@ -1,13 +1,13 @@
 package com.financial.indicators.service;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 import org.springframework.stereotype.Service;
 
 import com.financial.indicators.external.openfinancedata.dtos.FundamentalsDTO;
 import com.financial.indicators.external.openfinancedata.dtos.HistoryDividendsDTO;
 import com.financial.indicators.models.StockIndicators;
+import com.financial.indicators.utils.Utils;
 
 @Service
 public class IndicatorsService {
@@ -93,9 +93,9 @@ public class IndicatorsService {
         // indicadores que precisam de calculos
 
         // Earnings Yield
-        if (!isNullOrZero(fundamentals.getTrailingEps()) && !isNullOrZero(fundamentals.getCurrentPrice())) {
+        if (!Utils.isNullOrZero(fundamentals.getTrailingEps()) && !Utils.isNullOrZero(fundamentals.getCurrentPrice())) {
             indicadores.setEarningsYield(
-                    bdDivide(fundamentals.getTrailingEps(), fundamentals.getCurrentPrice()));
+                    Utils.bdDivide(fundamentals.getTrailingEps(), fundamentals.getCurrentPrice()));
         }
 
         // dividend true TTM
@@ -113,88 +113,74 @@ public class IndicatorsService {
         }
 
         // dividend Yield TTM calculado
-        if (!isNullOrZero(totalDividends) && !isNullOrZero(fundamentals.getCurrentPrice())) {
+        if (!Utils.isNullOrZero(totalDividends) && !Utils.isNullOrZero(fundamentals.getCurrentPrice())) {
             indicadores.setDividendYieldTtm(
-                    bdDivide(totalDividends, fundamentals.getCurrentPrice()));
+                    Utils.bdDivide(totalDividends, fundamentals.getCurrentPrice()));
         }
 
         // Market Cap Recalculado
-        if (!isNullOrZero(fundamentals.getCurrentPrice())
-                && !isNullOrZero(fundamentals.getSharesOutstanding())) {
+        if (!Utils.isNullOrZero(fundamentals.getCurrentPrice())
+                && !Utils.isNullOrZero(fundamentals.getSharesOutstanding())) {
 
             indicadores.setMarketCap(
-                    bdMultiply(fundamentals.getCurrentPrice(), fundamentals.getSharesOutstanding()));
+                    Utils.bdMultiply(fundamentals.getCurrentPrice(), fundamentals.getSharesOutstanding()));
         }
 
         // FREE CASH FLOW YIELD
-        if (!isNullOrZero(fundamentals.getFreeCashflow())
-                && !isNullOrZero(indicadores.getMarketCap())) {
+        if (!Utils.isNullOrZero(fundamentals.getFreeCashflow())
+                && !Utils.isNullOrZero(indicadores.getMarketCap())) {
 
             indicadores.setFreeCashFlowYield(
-                    bdDivide(fundamentals.getFreeCashflow(), indicadores.getMarketCap()));
+                    Utils.bdDivide(fundamentals.getFreeCashflow(), indicadores.getMarketCap()));
         }
 
         // PEG Ratio
-        if (!isNullOrZero(fundamentals.getCurrentPrice())
-                && !isNullOrZero(fundamentals.getTrailingEps())
-                && !isNullOrZero(fundamentals.getEarningsGrowth())) {
+        if (!Utils.isNullOrZero(fundamentals.getCurrentPrice())
+                && !Utils.isNullOrZero(fundamentals.getTrailingEps())
+                && !Utils.isNullOrZero(fundamentals.getEarningsGrowth())) {
 
-            BigDecimal pe = bdDivide(fundamentals.getCurrentPrice(), fundamentals.getTrailingEps());
+            BigDecimal pe = Utils.bdDivide(fundamentals.getCurrentPrice(), fundamentals.getTrailingEps());
 
-            if (!isNullOrZero(pe)) {
+            if (!Utils.isNullOrZero(pe)) {
                 indicadores.setPegRatio(
-                        bdDivide(pe, fundamentals.getEarningsGrowth()));
+                        Utils.bdDivide(pe, fundamentals.getEarningsGrowth()));
             }
         }
 
         // Price/Earnings (P/E)
-        if (!isNullOrZero(fundamentals.getTrailingEps()) && !isNullOrZero(fundamentals.getCurrentPrice())) {
+        if (!Utils.isNullOrZero(fundamentals.getTrailingEps()) && !Utils.isNullOrZero(fundamentals.getCurrentPrice())) {
             indicadores.setPriceToEarnings(
-                    bdDivide(fundamentals.getCurrentPrice(), fundamentals.getTrailingEps()));
+                    Utils.bdDivide(fundamentals.getCurrentPrice(), fundamentals.getTrailingEps()));
         }
 
         // Price/Sales (P/S)
-        if (!isNullOrZero(fundamentals.getTotalRevenue())
-                && !isNullOrZero(fundamentals.getSharesOutstanding())
-                && !isNullOrZero(fundamentals.getCurrentPrice())) {
+        if (!Utils.isNullOrZero(fundamentals.getTotalRevenue())
+                && !Utils.isNullOrZero(fundamentals.getSharesOutstanding())
+                && !Utils.isNullOrZero(fundamentals.getCurrentPrice())) {
 
-            BigDecimal revenuePerShare = bdDivide(fundamentals.getTotalRevenue(), fundamentals.getSharesOutstanding());
+            BigDecimal revenuePerShare = Utils.bdDivide(fundamentals.getTotalRevenue(), fundamentals.getSharesOutstanding());
 
             indicadores.setPriceToSales(
-                    bdDivide(fundamentals.getCurrentPrice(), revenuePerShare));
+                    Utils.bdDivide(fundamentals.getCurrentPrice(), revenuePerShare));
         }
 
         // Cash Per Share
-        if (!isNullOrZero(fundamentals.getTotalCash())
-                && !isNullOrZero(fundamentals.getSharesOutstanding())) {
+        if (!Utils.isNullOrZero(fundamentals.getTotalCash())
+                && !Utils.isNullOrZero(fundamentals.getSharesOutstanding())) {
 
             indicadores.setCashPerShare(
-                    bdDivide(fundamentals.getTotalCash(), fundamentals.getSharesOutstanding()));
+                    Utils.bdDivide(fundamentals.getTotalCash(), fundamentals.getSharesOutstanding()));
         }
 
         // Operating Cashflow Per Share
-        if (!isNullOrZero(fundamentals.getOperatingCashflow())
-                && !isNullOrZero(fundamentals.getSharesOutstanding())) {
+        if (!Utils.isNullOrZero(fundamentals.getOperatingCashflow())
+                && !Utils.isNullOrZero(fundamentals.getSharesOutstanding())) {
 
             indicadores.setOperatingCashflowPerShare(
-                    bdDivide(fundamentals.getOperatingCashflow(), fundamentals.getSharesOutstanding()));
+                    Utils.bdDivide(fundamentals.getOperatingCashflow(), fundamentals.getSharesOutstanding()));
         }
 
         return indicadores;
-    }
-
-    // todo: fazer um interface util para BigDecimals
-
-    private boolean isNullOrZero(BigDecimal v) {
-        return v == null || v.compareTo(BigDecimal.ZERO) == 0;
-    }
-
-    private BigDecimal bdDivide(BigDecimal a, BigDecimal b) {
-        return a.divide(b, 12, RoundingMode.HALF_UP); // precisão padrão
-    }
-
-    private BigDecimal bdMultiply(BigDecimal a, BigDecimal b) {
-        return a.multiply(b);
     }
 
 }
