@@ -8,7 +8,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class WebClientConfig {
 
-    @Value("${openfinance.base-url}")
+    @Value("${openfinance.base.url}")
     private String baseUrl;
 
     @Bean

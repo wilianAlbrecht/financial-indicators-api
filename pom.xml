@@ -67,10 +67,14 @@
     </dependencies>
 
     <build>
+        <finalName>financialIndicatorsApi</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <finalName>financialIndicatorsApi</finalName>
+                </configuration>
             </plugin>
         </plugins>
     </build>
