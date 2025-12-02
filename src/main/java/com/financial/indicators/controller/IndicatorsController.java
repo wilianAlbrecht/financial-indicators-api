@@ -7,11 +7,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.financial.indicators.config.JsonFormatter;
 import com.financial.indicators.external.openfinancedata.OpenFinanceDataClient;
-import com.financial.indicators.external.openfinancedata.dto.FundamentalsDTO;
-import com.financial.indicators.external.openfinancedata.dto.HistoryDividendsDTO;
-import com.financial.indicators.external.openfinancedata.mappers.FundamentalsMapper;
-import com.financial.indicators.external.openfinancedata.mappers.HistoryMapper;
-import com.financial.indicators.models.StockData;
+import com.financial.indicators.external.openfinancedata.dtos.FundamentalsDTO;
+import com.financial.indicators.external.openfinancedata.dtos.HistoryDividendsDTO;
 import com.financial.indicators.models.StockIndicators;
 import com.financial.indicators.service.IndicatorsService;
 
@@ -19,14 +16,10 @@ import com.financial.indicators.service.IndicatorsService;
 public class IndicatorsController {
 
     private final OpenFinanceDataClient client;
-    private final FundamentalsMapper mapperFundamentals;
-    private final HistoryMapper mapperHistory;
     private final IndicatorsService service;
 
-    public IndicatorsController(OpenFinanceDataClient client, FundamentalsMapper mapperFundamentals, HistoryMapper mapperHistory, IndicatorsService service) {
+    public IndicatorsController(OpenFinanceDataClient client, IndicatorsService service) {
         this.client = client;
-        this.mapperFundamentals = mapperFundamentals;
-        this.mapperHistory = mapperHistory;
         this.service = service;
     }
 
@@ -36,13 +29,9 @@ public class IndicatorsController {
         FundamentalsDTO fundamentals = client.getFundamentals(symbol);
         HistoryDividendsDTO dividends = client.getDividends(symbol);
 
-        StockData data = new StockData();
-        data.setSymbol(symbol);
+        fundamentals.setSymbol(symbol);
 
-        data = mapperFundamentals.toStockData(data, fundamentals);
-        data = mapperHistory.toStockData(data, dividends);
-        
-        StockIndicators indicators = service.calculate(data);
+        StockIndicators indicators = service.calculate(fundamentals, dividends);
 
         String json = JsonFormatter.stringify(indicators);
 

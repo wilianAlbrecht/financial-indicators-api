@@ -5,173 +5,185 @@ import java.math.RoundingMode;
 
 import org.springframework.stereotype.Service;
 
-import com.financial.indicators.models.StockData;
+import com.financial.indicators.external.openfinancedata.dtos.FundamentalsDTO;
+import com.financial.indicators.external.openfinancedata.dtos.HistoryDividendsDTO;
 import com.financial.indicators.models.StockIndicators;
 
 @Service
 public class IndicatorsService {
 
-    public StockIndicators calculate(StockData data) {
+    public StockIndicators calculate(FundamentalsDTO fundamentals, HistoryDividendsDTO dividends) {
 
         StockIndicators indicadores = new StockIndicators();
 
-        // ===========================indicadores que ja vem do
-        // OpenFinanceData============================//
-        // ===========================sem necessidade de
-        // calculos=========================================//
+        // indicadores que ja vem do OpenFinanceData sem necessidade de calculos
 
         // Identificação
-        indicadores.setSymbol(data.getSymbol());
-        indicadores.setPrice(data.getPrice());
+        indicadores.setSymbol(fundamentals.getSymbol());
+        indicadores.setCurrentPrice(fundamentals.getCurrentPrice());
 
         // ========================= DIVIDENDOS ================================
-        indicadores.setExDividendDate(data.getExDividendDate());
-        indicadores.setFiveYearAvgDividendYield(data.getFiveYearAvgDividendYield());
-        indicadores.setDividendForward(data.getDividendForward());
-        indicadores.setLastDividendValue(data.getLastDividendValue());
-        indicadores.setDividendRate(data.getDividendRate());
-        indicadores.setTrailingAnnualDividendYield(data.getTrailingAnnualDividendYield());
-        indicadores.setDividendYield(data.getDividendYield());
-        indicadores.setLastDividendDate(data.getLastDividendDate());
+        indicadores.setExDividendDate(fundamentals.getExDividendDate());
+        indicadores.setFiveYearAvgDividendYield(fundamentals.getFiveYearAvgDividendYield());
+        indicadores.setDividendForward(fundamentals.getDividendForward());
+        indicadores.setLastDividendValue(fundamentals.getLastDividendValue());
+        indicadores.setDividendRate(fundamentals.getDividendRate());
+        indicadores.setDividendForward(fundamentals.getTrailingAnnualDividendRate());
+        indicadores.setTrailingAnnualDividendYield(fundamentals.getTrailingAnnualDividendYield());
+        indicadores.setDividendYield(fundamentals.getDividendYield());
+        indicadores.setLastDividendDate(fundamentals.getLastDividendDate());
 
         // ======================== LUCROS (EPS) ================================
-        indicadores.setEpsTtm(data.getEpsTtm());
-        indicadores.setForwardEps(data.getForwardEps());
+        indicadores.setTrailingEps(fundamentals.getTrailingEps());
+        indicadores.setForwardEps(fundamentals.getForwardEps());
 
         // ======================= VALUATION ==================================
-        indicadores.setPriceToBook(data.getPriceToBook());
-        indicadores.setBookValue(data.getBookValue());
-        indicadores.setEnterpriseValue(data.getEnterpriseValue());
-        indicadores.setEnterpriseToRevenue(data.getEnterpriseToRevenue());
-        indicadores.setEnterpriseToEbitda(data.getEnterpriseToEbitda());
-        indicadores.setProfitMargin(data.getProfitMargin());
+        indicadores.setPriceToBook(fundamentals.getPriceToBook());
+        indicadores.setBookValue(fundamentals.getBookValue());
+        indicadores.setEnterpriseValue(fundamentals.getEnterpriseValue());
+        indicadores.setEnterpriseToRevenue(fundamentals.getEnterpriseToRevenue());
+        indicadores.setEnterpriseToEbitda(fundamentals.getEnterpriseToEbitda());
+        indicadores.setProfitMargins(fundamentals.getProfitMargins());
 
         // ======================= RENTABILIDADE ===============================
-        indicadores.setReturnOnAssets(data.getReturnOnAssets());
-        indicadores.setReturnOnEquity(data.getReturnOnEquity());
+        indicadores.setReturnOnAssets(fundamentals.getReturnOnAssets());
+        indicadores.setReturnOnEquity(fundamentals.getReturnOnEquity());
 
         // ======================= ESTRUTURA DE CAPITAL ========================
-        indicadores.setTotalDebt(data.getTotalDebt());
-        indicadores.setDebtToEquity(data.getDebtToEquity());
-        indicadores.setSharesOutstanding(data.getSharesOutstanding());
+        indicadores.setTotalDebt(fundamentals.getTotalDebt());
+        indicadores.setDebtToEquity(fundamentals.getDebtToEquity());
+        indicadores.setSharesOutstanding(fundamentals.getSharesOutstanding());
 
         // ======================= CRESCIMENTO ================================
-        indicadores.setRevenueGrowth(data.getRevenueGrowth());
-        indicadores.setEarningsGrowth(data.getEarningsGrowth());
+        indicadores.setRevenueGrowth(fundamentals.getRevenueGrowth());
+        indicadores.setEarningsGrowth(fundamentals.getEarningsGrowth());
 
         // ======================= MARGENS ====================================
-        indicadores.setGrossMargin(data.getGrossMargin());
-        indicadores.setOperatingMargin(data.getOperatingMargin());
-        indicadores.setEbitdaMargin(data.getEbitdaMargin());
-        indicadores.setGrossProfits(data.getGrossProfits());
+        indicadores.setGrossMargins(fundamentals.getGrossMargins());
+        indicadores.setOperatingMargins(fundamentals.getOperatingMargins());
+        indicadores.setEbitdaMargins(fundamentals.getEbitdaMargins());
+        indicadores.setGrossProfits(fundamentals.getGrossProfits());
 
         // ======================= FLUXO DE CAIXA ==============================
-        indicadores.setOperatingCashflow(data.getOperatingCashflow());
-        indicadores.setFreeCashFlow(data.getFreeCashFlow());
-        indicadores.setTotalCash(data.getTotalCash());
-        indicadores.setTotalCashPerShare(data.getTotalCashPerShare());
+        indicadores.setOperatingCashflow(fundamentals.getOperatingCashflow());
+        indicadores.setFreeCashflow(fundamentals.getFreeCashflow());
+        indicadores.setTotalCash(fundamentals.getTotalCash());
+        indicadores.setTotalCashPerShare(fundamentals.getTotalCashPerShare());
 
         // ======================= RECEITAS ====================================
-        indicadores.setTotalRevenue(data.getTotalRevenue());
-        indicadores.setRevenuePerShare(data.getRevenuePerShare());
+        indicadores.setTotalRevenue(fundamentals.getTotalRevenue());
+        indicadores.setRevenuePerShare(fundamentals.getRevenuePerShare());
 
         // ======================= ANALISTAS ===================================
-        indicadores.setTargetHighPrice(data.getTargetHighPrice());
-        indicadores.setTargetLowPrice(data.getTargetLowPrice());
-        indicadores.setTargetMeanPrice(data.getTargetMeanPrice());
-        indicadores.setTargetMedianPrice(data.getTargetMedianPrice());
-        indicadores.setRecommendationMean(data.getRecommendationMean());
-        indicadores.setNumberOfAnalystOpinions(data.getNumberOfAnalystOpinions());
+        indicadores.setTargetHighPrice(fundamentals.getTargetHighPrice());
+        indicadores.setTargetLowPrice(fundamentals.getTargetLowPrice());
+        indicadores.setTargetMeanPrice(fundamentals.getTargetMeanPrice());
+        indicadores.setTargetMedianPrice(fundamentals.getTargetMedianPrice());
+        indicadores.setRecommendationMean(fundamentals.getRecommendationMean());
+        indicadores.setNumberOfAnalystOpinions(fundamentals.getNumberOfAnalystOpinions());
 
         // ======================= MERCADO / DADOS GERAIS ======================
-        indicadores.setPreviousClose(data.getPreviousClose());
-        indicadores.setFiftyTwoWeekHigh(data.getFiftyTwoWeekHigh());
-        indicadores.setFiftyTwoWeekLow(data.getFiftyTwoWeekLow());
-        indicadores.setBeta(data.getBeta());
-        indicadores.setAverageVolume(data.getAverageVolume());
-        indicadores.setVolume(data.getVolume());
+        indicadores.setPreviousClose(fundamentals.getPreviousClose());
+        indicadores.setFiftyTwoWeekHigh(fundamentals.getFiftyTwoWeekHigh());
+        indicadores.setFiftyTwoWeekLow(fundamentals.getFiftyTwoWeekLow());
+        indicadores.setBeta(fundamentals.getBeta());
+        indicadores.setAverageVolume(fundamentals.getAverageVolume());
+        indicadores.setVolume(fundamentals.getVolume());
 
-        // ===========================indicadores que precisam de
-        // calculos================================//
-
-        indicadores.setDividendTtm(data.getDividendTrueTtm());
+        // indicadores que precisam de calculos
 
         // Earnings Yield
-        if (!isNullOrZero(data.getEpsTtm()) && !isNullOrZero(data.getPrice())) {
+        if (!isNullOrZero(fundamentals.getTrailingEps()) && !isNullOrZero(fundamentals.getCurrentPrice())) {
             indicadores.setEarningsYield(
-                    bdDivide(data.getEpsTtm(), data.getPrice()));
+                    bdDivide(fundamentals.getTrailingEps(), fundamentals.getCurrentPrice()));
         }
 
-        //dividend Yield TTM calculado
-        if (!isNullOrZero(data.getDividendTrueTtm()) && !isNullOrZero(data.getPrice())) {
+        // dividend true TTM
+        BigDecimal totalDividends = BigDecimal.ZERO;
+
+        if (dividends != null && dividends.getDividends() != null) {
+
+            for (int x = 0; x < dividends.getDividends().size(); x++) {
+
+                if (dividends.getDividends().get(x) != null) {
+                    totalDividends = totalDividends.add(dividends.getDividends().get(x).getAmount());
+                }
+            }
+            indicadores.setDividendTtm(totalDividends);
+        }
+
+        // dividend Yield TTM calculado
+        if (!isNullOrZero(totalDividends) && !isNullOrZero(fundamentals.getCurrentPrice())) {
             indicadores.setDividendYieldTtm(
-                    bdDivide(data.getDividendTrueTtm(), data.getPrice()));
+                    bdDivide(totalDividends, fundamentals.getCurrentPrice()));
         }
 
         // Market Cap Recalculado
-        if (!isNullOrZero(data.getPrice())
-                && !isNullOrZero(data.getSharesOutstanding())) {
+        if (!isNullOrZero(fundamentals.getCurrentPrice())
+                && !isNullOrZero(fundamentals.getSharesOutstanding())) {
 
             indicadores.setMarketCap(
-                    bdMultiply(data.getPrice(), data.getSharesOutstanding()));
+                    bdMultiply(fundamentals.getCurrentPrice(), fundamentals.getSharesOutstanding()));
         }
 
         // FREE CASH FLOW YIELD
-        if (!isNullOrZero(data.getFreeCashFlow())
+        if (!isNullOrZero(fundamentals.getFreeCashflow())
                 && !isNullOrZero(indicadores.getMarketCap())) {
 
             indicadores.setFreeCashFlowYield(
-                    bdDivide(data.getFreeCashFlow(), indicadores.getMarketCap()));
+                    bdDivide(fundamentals.getFreeCashflow(), indicadores.getMarketCap()));
         }
 
         // PEG Ratio
-        if (!isNullOrZero(data.getPrice())
-                && !isNullOrZero(data.getEpsTtm())
-                && !isNullOrZero(data.getEarningsGrowth())) {
+        if (!isNullOrZero(fundamentals.getCurrentPrice())
+                && !isNullOrZero(fundamentals.getTrailingEps())
+                && !isNullOrZero(fundamentals.getEarningsGrowth())) {
 
-            BigDecimal pe = bdDivide(data.getPrice(), data.getEpsTtm());
+            BigDecimal pe = bdDivide(fundamentals.getCurrentPrice(), fundamentals.getTrailingEps());
 
             if (!isNullOrZero(pe)) {
                 indicadores.setPegRatio(
-                        bdDivide(pe, data.getEarningsGrowth()));
+                        bdDivide(pe, fundamentals.getEarningsGrowth()));
             }
         }
 
         // Price/Earnings (P/E)
-        if (!isNullOrZero(data.getEpsTtm()) && !isNullOrZero(data.getPrice())) {
+        if (!isNullOrZero(fundamentals.getTrailingEps()) && !isNullOrZero(fundamentals.getCurrentPrice())) {
             indicadores.setPriceToEarnings(
-                    bdDivide(data.getPrice(), data.getEpsTtm()));
+                    bdDivide(fundamentals.getCurrentPrice(), fundamentals.getTrailingEps()));
         }
 
         // Price/Sales (P/S)
-        if (!isNullOrZero(data.getTotalRevenue())
-                && !isNullOrZero(data.getSharesOutstanding())
-                && !isNullOrZero(data.getPrice())) {
+        if (!isNullOrZero(fundamentals.getTotalRevenue())
+                && !isNullOrZero(fundamentals.getSharesOutstanding())
+                && !isNullOrZero(fundamentals.getCurrentPrice())) {
 
-            BigDecimal revenuePerShare = bdDivide(data.getTotalRevenue(), data.getSharesOutstanding());
+            BigDecimal revenuePerShare = bdDivide(fundamentals.getTotalRevenue(), fundamentals.getSharesOutstanding());
 
             indicadores.setPriceToSales(
-                    bdDivide(data.getPrice(), revenuePerShare));
+                    bdDivide(fundamentals.getCurrentPrice(), revenuePerShare));
         }
 
         // Cash Per Share
-        if (!isNullOrZero(data.getTotalCash())
-                && !isNullOrZero(data.getSharesOutstanding())) {
+        if (!isNullOrZero(fundamentals.getTotalCash())
+                && !isNullOrZero(fundamentals.getSharesOutstanding())) {
 
             indicadores.setCashPerShare(
-                    bdDivide(data.getTotalCash(), data.getSharesOutstanding()));
+                    bdDivide(fundamentals.getTotalCash(), fundamentals.getSharesOutstanding()));
         }
 
         // Operating Cashflow Per Share
-        if (!isNullOrZero(data.getOperatingCashflow())
-                && !isNullOrZero(data.getSharesOutstanding())) {
+        if (!isNullOrZero(fundamentals.getOperatingCashflow())
+                && !isNullOrZero(fundamentals.getSharesOutstanding())) {
 
             indicadores.setOperatingCashflowPerShare(
-                    bdDivide(data.getOperatingCashflow(), data.getSharesOutstanding()));
+                    bdDivide(fundamentals.getOperatingCashflow(), fundamentals.getSharesOutstanding()));
         }
 
         return indicadores;
     }
+
+    // todo: fazer um interface util para BigDecimals
 
     private boolean isNullOrZero(BigDecimal v) {
         return v == null || v.compareTo(BigDecimal.ZERO) == 0;

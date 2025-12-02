@@ -1,15 +1,15 @@
-package com.financial.indicators.models;
+package com.financial.indicators.external.openfinancedata.dtos;
 
-import lombok.Data;
 import java.math.BigDecimal;
 
+import lombok.Data;
+
 @Data
-public class StockData {
+public class FundamentalsDTO {
 
     private String symbol;
 
-    // Preço é dinheiro
-    private BigDecimal price;
+    private BigDecimal currentPrice;
 
     // =====================================================================
     // ========================= FUNDAMENTALS DATA ==========================
@@ -20,13 +20,14 @@ public class StockData {
     private BigDecimal fiveYearAvgDividendYield;
     private BigDecimal dividendForward;
     private BigDecimal lastDividendValue;
+    private BigDecimal trailingAnnualDividendRate;
 
     // Lucros
-    private BigDecimal epsTtm;
+    private BigDecimal trailingEps;
 
     // Valor patrimonial
     private BigDecimal priceToBook;
-    private BigDecimal profitMargin;
+    private BigDecimal profitMargins;
 
     // ROA / ROE (proporções)
     private BigDecimal returnOnAssets;
@@ -50,9 +51,9 @@ public class StockData {
     private BigDecimal totalRevenue;
     private BigDecimal ebitda;
 
-    private BigDecimal grossMargin;
-    private BigDecimal operatingMargin;
-    private BigDecimal ebitdaMargin;
+    private BigDecimal grossMargins;
+    private BigDecimal operatingMargins;
+    private BigDecimal ebitdaMargins;
 
     private BigDecimal revenueGrowth;
     private BigDecimal earningsGrowth;
@@ -66,7 +67,7 @@ public class StockData {
 
     private BigDecimal operatingCashflow;
     private BigDecimal grossProfits;
-    private BigDecimal freeCashFlow;
+    private BigDecimal freeCashflow;
 
     private BigDecimal revenuePerShare;
 
@@ -111,9 +112,5 @@ public class StockData {
     private BigDecimal volume;
     private BigDecimal dividendYield;
     private BigDecimal marketCap;
-
-
-    // ===========================History Dividends Data=========================
-    private BigDecimal dividendTrueTtm;
 
 }

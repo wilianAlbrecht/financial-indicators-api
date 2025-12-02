@@ -3,8 +3,8 @@ package com.financial.indicators.external.openfinancedata;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.financial.indicators.external.openfinancedata.dto.FundamentalsDTO;
-import com.financial.indicators.external.openfinancedata.dto.HistoryDividendsDTO;
+import com.financial.indicators.external.openfinancedata.dtos.FundamentalsDTO;
+import com.financial.indicators.external.openfinancedata.dtos.HistoryDividendsDTO;
 
 @Component
 public class OpenFinanceDataClient {
@@ -18,7 +18,7 @@ public class OpenFinanceDataClient {
 
     public FundamentalsDTO getFundamentals(String symbol) {
         return webClient.get()
-                .uri("/fundamentals/{symbol}", symbol)
+                .uri("/fundamentals/{symbol}?mode=unified", symbol)
                 .retrieve()
                 .bodyToMono(FundamentalsDTO.class)
                 .block();
@@ -31,6 +31,7 @@ public class OpenFinanceDataClient {
                         .queryParam("range", "12mo")
                         .queryParam("interval", "1mo")
                         .queryParam("events", "div")
+                        .queryParam("mode", "unified")
                         .build(symbol))
                 .retrieve()
                 .bodyToMono(HistoryDividendsDTO.class)

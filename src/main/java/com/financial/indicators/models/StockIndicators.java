@@ -2,19 +2,21 @@ package com.financial.indicators.models;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.financial.indicators.config.StockIndicatorsSerializer;
 
 import lombok.Data;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 
 @JsonSerialize(using = StockIndicatorsSerializer.class)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 public class StockIndicators {
 
     private String symbol;
 
-    private BigDecimal price;
+    private BigDecimal currentPrice;
 
     // ========================= DIVIDENDOS ================================
     private BigDecimal exDividendDate; 
@@ -27,7 +29,7 @@ public class StockIndicators {
     private BigDecimal lastDividendDate;
 
     // ======================== LUCROS (EPS) ================================
-    private BigDecimal epsTtm;
+    private BigDecimal trailingEps;
     private BigDecimal forwardEps;
 
     // ======================= VALUATION ==================================
@@ -36,7 +38,7 @@ public class StockIndicators {
     private BigDecimal enterpriseValue;
     private BigDecimal enterpriseToRevenue;
     private BigDecimal enterpriseToEbitda;
-    private BigDecimal profitMargin;
+    private BigDecimal profitMargins;
     private BigDecimal marketCap;               
 
     // ======================= RENTABILIDADE ===============================
@@ -53,14 +55,14 @@ public class StockIndicators {
     private BigDecimal earningsGrowth;
 
     // ======================= MARGENS ====================================
-    private BigDecimal grossMargin;
-    private BigDecimal operatingMargin;
-    private BigDecimal ebitdaMargin;
+    private BigDecimal grossMargins;
+    private BigDecimal operatingMargins;
+    private BigDecimal ebitdaMargins;
     private BigDecimal grossProfits;
 
     // ======================= FLUXO DE CAIXA ==============================
     private BigDecimal operatingCashflow;
-    private BigDecimal freeCashFlow;
+    private BigDecimal freeCashflow;
     private BigDecimal totalCash;
     private BigDecimal totalCashPerShare;
 
