@@ -3,13 +3,10 @@ package com.financial.indicators.models;
 import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.financial.indicators.config.StockIndicatorsSerializer;
 
 import lombok.Data;
 
 
-@JsonSerialize(using = StockIndicatorsSerializer.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 public class StockIndicators {
