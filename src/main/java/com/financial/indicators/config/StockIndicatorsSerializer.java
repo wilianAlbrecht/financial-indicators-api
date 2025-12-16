@@ -1,15 +1,15 @@
 package com.financial.indicators.config;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.financial.indicators.models.StockIndicators;
-
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Arrays;
+
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.financial.indicators.models.StockIndicators;
 
 public class StockIndicatorsSerializer extends JsonSerializer<StockIndicators> {
 
@@ -39,16 +39,15 @@ public class StockIndicatorsSerializer extends JsonSerializer<StockIndicators> {
                 // ===============================
                 // BIGDECIMAL → STRING PLAIN
                 // ===============================
-                if (fieldValue instanceof BigDecimal) {
-                    gen.writeStringField(name, ((BigDecimal) fieldValue).toPlainString());
+                if (fieldValue instanceof BigDecimal bigDecimal) {
+                    gen.writeStringField(name, bigDecimal.toPlainString());
                     continue;
                 }
 
                 // ===============================
                 // DOUBLE → STRING SEM E NOTAÇÃO
                 // ===============================
-                if (fieldValue instanceof Double) {
-                    Double d = (Double) fieldValue;
+                if (fieldValue instanceof Double d) {
 
                     // Usa DecimalFormat para evitar notação científica
                     String formatted = DOUBLE_FORMAT.format(d);
